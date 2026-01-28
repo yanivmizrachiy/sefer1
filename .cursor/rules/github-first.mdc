@@ -1,0 +1,38 @@
+---
+description: GitHub-first workflow - repository is single source of truth
+alwaysApply: true
+---
+
+# GitHub-First Workflow
+
+This project follows a **GitHub-first** development model where the repository is the single source of truth.
+
+## Core Principles
+
+- **GitHub repository is the single source of truth** - All project state lives in the repository
+- **Do not rely on local-only state** - Never assume local files, environment variables, or uncommitted changes exist
+- **Every meaningful change must be committed** - All code changes, configuration updates, and documentation modifications should be committed to git
+- **If it is not committed, it does not exist** - Uncommitted work is considered temporary and may be lost
+- **Multi-device workflow** - This project is opened from multiple devices; always ensure changes are pushed to GitHub
+- **Preserve repository consistency** - Maintain reproducibility and consistency across all environments
+
+## Workflow Requirements
+
+1. **Always commit meaningful changes** - After making code changes, commit them with clear messages
+2. **Push to GitHub regularly** - Don't leave commits only in local repository
+3. **Never assume local state** - Don't rely on:
+   - Uncommitted files
+   - Local environment variables not in the repo
+   - Local-only configuration
+   - Files in `.gitignore` unless explicitly documented
+4. **Document dependencies** - All dependencies and setup requirements must be in the repository (package.json, requirements.txt, Dockerfile, etc.)
+5. **Version control everything** - Configuration files, scripts, and documentation should be tracked
+
+## When Making Changes
+
+- ✅ Commit changes immediately after completing a feature or fix
+- ✅ Push commits to GitHub to ensure they're available on all devices
+- ✅ Include clear commit messages describing what changed and why
+- ❌ Don't leave uncommitted work "for later"
+- ❌ Don't rely on local-only files or state
+- ❌ Don't assume others (or other devices) have access to uncommitted changes
