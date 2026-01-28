@@ -6,8 +6,8 @@
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content="#061b3a" />
 
-    <title>הדף של יניב רז</title>
-    <meta name="description" content="אתר מהיר עם קישור חיצוני קבוע." />
+    <title>האתר של יניב רז</title>
+    <meta name="description" content="האתר של יניב רז" />
 
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -49,50 +49,19 @@
     </div>
 
     <header class="top">
-      <h1 class="title">הדף של יניב רז</h1>
-      <p class="subtitle">אתר מהיר, נקי ויפה — עם קישור חיצוני קבוע.</p>
+      <h1 class="title">האתר של יניב רז</h1>
     </header>
 
-    <main class="wrap">
-      <section class="card" aria-label="כרטיס ראשי">
-        <div class="card__shine" aria-hidden="true"></div>
-        <h2 class="card__title">ברוכים הבאים</h2>
-        <p class="card__text">
-          זה עמוד אינטרנט סטטי (HTML/CSS) שמותאם לנייד ולדסקטופ, נטען מהר, ונראה “פרימיום”.
-        </p>
-        <ul class="bullets">
-          <li>עיצוב כחול כהה עם שכבות אור עדינות</li>
-          <li>כיתובים ברורים בעברית (RTL)</li>
-          <li>כפתור קישור חיצוני קבוע בכל מסך</li>
-        </ul>
-      </section>
-
-      <section class="card card--alt" aria-label="קישור חיצוני">
-        <h2 class="card__title">קישור חיצוני</h2>
-        <p class="card__text">
-          הכפתור הקבוע בפינה פותח קישור חיצוני בלשונית חדשה, ועובד מכל מכשיר.
-        </p>
-        <p class="hint">ברירת המחדל כאן היא לפרופיל GitHub.</p>
-      </section>
-    </main>
+    <main class="wrap" aria-hidden="true"></main>
 
     <a
       class="cta"
       href="https://github.com/yanivmizrachiy"
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="פתח קישור חיצוני"
+      aria-label="קישור חיצוני"
     >
-      קישור חיצוני
       <span class="cta__icon" aria-hidden="true">↗</span>
     </a>
-
-    <footer class="footer">
-      <small>© <span id="y"></span> יניב רז</small>
-    </footer>
-
-    <script>
-      document.getElementById("y").textContent = String(new Date().getFullYear());
-    </script>
   </body>
 </html>
