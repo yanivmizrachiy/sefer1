@@ -16,6 +16,14 @@ This project follows a **GitHub-first** development model where the repository i
 - **Multi-device workflow** - This project is opened from multiple devices; always ensure changes are pushed to GitHub
 - **Preserve repository consistency** - Maintain reproducibility and consistency across all environments
 
+## No “Demo” / Placeholder Text
+
+Never ship user-facing text that looks like placeholders, drafts, or demos unless the user explicitly asks for it.
+
+- **Forbidden in user-facing content**: `demo`, `דמו`, `sample`, `placeholder`, `lorem ipsum`, `TODO`, `TBD`, “coming soon”
+- **Where this applies**: website copy (`ATAR1/`), `README.md`, docs, UI labels, and any content that users will read
+- **What to do instead**: use the real title/name and real links; if information is missing, ask for the exact final wording/URL or leave it out
+
 ## Workflow Requirements
 
 1. **Always commit meaningful changes** - After making code changes, commit them with clear messages
