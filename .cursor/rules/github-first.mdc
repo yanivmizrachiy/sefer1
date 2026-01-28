@@ -36,3 +36,20 @@ This project follows a **GitHub-first** development model where the repository i
 - ❌ Don't leave uncommitted work "for later"
 - ❌ Don't rely on local-only files or state
 - ❌ Don't assume others (or other devices) have access to uncommitted changes
+
+## Automatic Push Workflow
+
+After committing changes, **always push to GitHub immediately**:
+
+1. **Check for unpushed commits**: `git log origin/main..HEAD --oneline`
+2. **Push to GitHub**: `git push origin HEAD:main` (or current branch)
+3. **Verify push succeeded**: Check that commits appear in `git log origin/main`
+
+### Troubleshooting Push Issues
+
+If push fails due to proxy/network issues:
+- Disable proxy for GitHub: `git config --global http.https://github.com.proxy ""`
+- Verify connection: `git ls-remote --heads origin`
+- Retry push until successful
+
+**Never consider work complete until it's pushed to GitHub.**
