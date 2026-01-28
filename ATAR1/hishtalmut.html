@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>השתלמויות של יניב רז</title>
+    <meta
+      name="description"
+      content="ריכוז ההשתלמויות של יניב רז לפי תאריך, יום בשבוע ושעות."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+      .page__header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .page__title {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+      .page__meta {
+        margin: 0 0 16px;
+        color: #9ca3af;
+        font-size: 0.95rem;
+      }
+      .page__back {
+        font-size: 0.9rem;
+        color: #93c5fd;
+        text-decoration: none;
+      }
+      .page__back:hover {
+        text-decoration: underline;
+      }
+      .table-wrap {
+        margin-top: 8px;
+        overflow-x: auto;
+        border-radius: 12px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.09), transparent 55%),
+          rgba(15, 23, 42, 0.82);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+        color: #e5e7eb;
+      }
+      thead {
+        background: rgba(15, 23, 42, 0.95);
+      }
+      th,
+      td {
+        padding: 10px 12px;
+        text-align: right;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+        white-space: nowrap;
+      }
+      th {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #cbd5f5;
+      }
+      tbody tr:nth-child(even) {
+        background: rgba(15, 23, 42, 0.75);
+      }
+      tbody tr:nth-child(odd) {
+        background: rgba(15, 23, 42, 0.55);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 0.8rem;
+        background: rgba(148, 163, 184, 0.25);
+        color: #e5e7eb;
+        margin-inline-start: 4px;
+      }
+      .tag--main {
+        background: rgba(248, 113, 113, 0.25);
+        color: #fecaca;
+      }
+      .state {
+        margin-top: 12px;
+        font-size: 0.95rem;
+        color: #9ca3af;
+      }
+      .state--error {
+        color: #fecaca;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+    <main class="page">
+      <header class="page__header">
+        <h1 class="page__title">השתלמויות של יניב רז</h1>
+        <a class="page__back" href="./index.html">← חזרה לעמוד הראשי</a>
+      </header>
+      <p class="page__meta">
+        בעמוד זה מופיע ריכוז ההשתלמויות של יניב רז לפי תאריך, יום בשבוע ושעות. הנתונים נטענים
+        מקובץ מסד נתונים קובצי בתוך הריפו:
+        <code>HISHTALMUT1/hishtalmut-data.json</code>.
+      </p>
+
+      <div class="table-wrap">
+        <table id="hishtalmut-table" aria-label="טבלת ההשתלמויות של יניב רז">
+          <thead>
+            <tr>
+              <th>שם ההשתלמות</th>
+              <th>חודש</th>
+              <th>יום בחודש</th>
+              <th>יום בשבוע</th>
+              <th>שעות ההשתלמות</th>
+              <th>מספר שעות</th>
+              <th>סיווג / תגיות</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <p id="state-empty" class="state" style="display: none">
+        עדיין לא הוגדרו נתוני השתלמויות ב-<code>HISHTALMUT1/hishtalmut-data.json</code>.
+      </p>
+      <p id="state-error" class="state state--error" style="display: none">
+        לא ניתן היה לטעון את נתוני ההשתלמויות. ודא שהקובץ
+        <code>HISHTALMUT1/hishtalmut-data.json</code> קיים ותקין.
+      </p>
+    </main>
+
+    <script>
+      async function loadHishtalmutData() {
+        const tbody = document.querySelector("#hishtalmut-table tbody");
+        const emptyState = document.getElementById("state-empty");
+        const errorState = document.getElementById("state-error");
+
+        try {
+          const res = await fetch("../HISHTALMUT1/hishtalmut-data.json?cacheBust=" + Date.now());
+          if (!res.ok) {
+            if (res.status === 404) {
+              emptyState.style.display = "block";
+              return;
+            }
+            throw new Error("HTTP " + res.status);
+          }
+
+          const data = await res.json();
+          if (!Array.isArray(data) || data.length === 0) {
+            emptyState.style.display = "block";
+            return;
+          }
+
+          data.forEach((item) => {
+            const tr = document.createElement("tr");
+
+            const tdTitle = document.createElement("td");
+            tdTitle.textContent = item.title || "";
+            tr.appendChild(tdTitle);
+
+            const tdMonth = document.createElement("td");
+            tdMonth.textContent = item.month || "";
+            tr.appendChild(tdMonth);
+
+            const tdDayOfMonth = document.createElement("td");
+            tdDayOfMonth.textContent = item.dayOfMonth ?? "";
+            tr.appendChild(tdDayOfMonth);
+
+            const tdWeekday = document.createElement("td");
+            tdWeekday.textContent = item.weekday || "";
+            tr.appendChild(tdWeekday);
+
+            const tdTimeRange = document.createElement("td");
+            tdTimeRange.textContent = item.timeRange || "";
+            tr.appendChild(tdTimeRange);
+
+            const tdHoursTotal = document.createElement("td");
+            tdHoursTotal.textContent =
+              item.hoursTotal !== undefined && item.hoursTotal !== null ? item.hoursTotal : "";
+            tr.appendChild(tdHoursTotal);
+
+            const tdCategory = document.createElement("td");
+            if (item.category) {
+              const mainTag = document.createElement("span");
+              mainTag.className = "tag tag--main";
+              mainTag.textContent = item.category;
+              tdCategory.appendChild(mainTag);
+            }
+            if (Array.isArray(item.tags)) {
+              item.tags.forEach((tag) => {
+                const span = document.createElement("span");
+                span.className = "tag";
+                span.textContent = tag;
+                tdCategory.appendChild(span);
+              });
+            }
+            tr.appendChild(tdCategory);
+
+            tbody.appendChild(tr);
+          });
+        } catch (err) {
+          console.error("Failed to load hishtalmut data", err);
+          errorState.style.display = "block";
+        }
+      }
+
+      loadHishtalmutData();
+    </script>
+  </body>
+</html>
+
