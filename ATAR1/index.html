@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#061b3a" />
+
+    <title>הדף של יניב רז</title>
+    <meta name="description" content="אתר מהיר עם קישור חיצוני קבוע." />
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true">
+      <svg class="bg__svg" viewBox="0 0 1200 800" preserveAspectRatio="none">
+        <defs>
+          <radialGradient id="g1" cx="20%" cy="15%" r="70%">
+            <stop offset="0%" stop-color="rgba(124, 240, 255, 0.22)" />
+            <stop offset="55%" stop-color="rgba(124, 240, 255, 0.06)" />
+            <stop offset="100%" stop-color="rgba(124, 240, 255, 0)" />
+          </radialGradient>
+          <radialGradient id="g2" cx="80%" cy="70%" r="75%">
+            <stop offset="0%" stop-color="rgba(183, 120, 255, 0.20)" />
+            <stop offset="60%" stop-color="rgba(183, 120, 255, 0.05)" />
+            <stop offset="100%" stop-color="rgba(183, 120, 255, 0)" />
+          </radialGradient>
+          <linearGradient id="grid" x1="0" x2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.08)" />
+            <stop offset="100%" stop-color="rgba(255,255,255,0.00)" />
+          </linearGradient>
+        </defs>
+
+        <rect width="1200" height="800" fill="url(#g1)" />
+        <rect width="1200" height="800" fill="url(#g2)" />
+        <g opacity="0.22">
+          <path d="M0 140H1200" stroke="url(#grid)" />
+          <path d="M0 260H1200" stroke="url(#grid)" />
+          <path d="M0 380H1200" stroke="url(#grid)" />
+          <path d="M0 500H1200" stroke="url(#grid)" />
+          <path d="M0 620H1200" stroke="url(#grid)" />
+          <path d="M220 0V800" stroke="url(#grid)" />
+          <path d="M420 0V800" stroke="url(#grid)" />
+          <path d="M620 0V800" stroke="url(#grid)" />
+          <path d="M820 0V800" stroke="url(#grid)" />
+          <path d="M1020 0V800" stroke="url(#grid)" />
+        </g>
+      </svg>
+    </div>
+
+    <header class="top">
+      <h1 class="title">הדף של יניב רז</h1>
+      <p class="subtitle">אתר מהיר, נקי ויפה — עם קישור חיצוני קבוע.</p>
+    </header>
+
+    <main class="wrap">
+      <section class="card" aria-label="כרטיס ראשי">
+        <div class="card__shine" aria-hidden="true"></div>
+        <h2 class="card__title">ברוכים הבאים</h2>
+        <p class="card__text">
+          זה עמוד אינטרנט סטטי (HTML/CSS) שמותאם לנייד ולדסקטופ, נטען מהר, ונראה “פרימיום”.
+        </p>
+        <ul class="bullets">
+          <li>עיצוב כחול כהה עם שכבות אור עדינות</li>
+          <li>כיתובים ברורים בעברית (RTL)</li>
+          <li>כפתור קישור חיצוני קבוע בכל מסך</li>
+        </ul>
+      </section>
+
+      <section class="card card--alt" aria-label="קישור חיצוני">
+        <h2 class="card__title">קישור חיצוני</h2>
+        <p class="card__text">
+          הכפתור הקבוע בפינה פותח קישור חיצוני בלשונית חדשה, ועובד מכל מכשיר.
+        </p>
+        <p class="hint">ברירת המחדל כאן היא לפרופיל GitHub.</p>
+      </section>
+    </main>
+
+    <a
+      class="cta"
+      href="https://github.com/yanivmizrachiy"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="פתח קישור חיצוני"
+    >
+      קישור חיצוני
+      <span class="cta__icon" aria-hidden="true">↗</span>
+    </a>
+
+    <footer class="footer">
+      <small>© <span id="y"></span> יניב רז</small>
+    </footer>
+
+    <script>
+      document.getElementById("y").textContent = String(new Date().getFullYear());
+    </script>
+  </body>
+</html>
