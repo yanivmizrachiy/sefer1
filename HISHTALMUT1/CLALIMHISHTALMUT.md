@@ -7,9 +7,9 @@
 ## עקרונות כלליים
 
 - **GitHub הוא מקור האמת היחיד** לנתוני ההשתלמויות.
-- הנתונים נשמרים בקובץ אחד מרכזי: `HISHTALMUT1/hishtalmut-data.json`.
+- הנתונים נשמרים בקובץ אחד מרכזי שמופץ עם האתר: `ATAR1/hishtalmut-data.json`.
 - כל שינוי בנתוני ההשתלמויות חייב לעבור דרך:
-  1. עריכת הקובץ `hishtalmut-data.json`
+  1. עריכת הקובץ `ATAR1/hishtalmut-data.json`
   2. ביצוע `git commit`
   3. ביצוע `git push` ל-GitHub
 
@@ -61,15 +61,15 @@
 
 1. **לפני עריכה** (בכל מחשב):
    - להריץ `git pull` בריפו `sefer1`
-   - לוודא שקובץ `HISHTALMUT1/hishtalmut-data.json` עודכן מהענן
+   - לוודא שקובץ `ATAR1/hishtalmut-data.json` עודכן מהענן
 
 2. **בעת הוספה/עדכון של השתלמות**:
-   - לפתוח ולערוך את `HISHTALMUT1/hishtalmut-data.json`
+   - לפתוח ולערוך את `ATAR1/hishtalmut-data.json`
    - להוסיף/לעדכן אובייקט אחד לכל השתלמות
 
 3. **אחרי עריכה**:
    - להריץ `git status` ולוודא שהקובץ עודכן
-   - `git add HISHTALMUT1/hishtalmut-data.json`
+   - `git add ATAR1/hishtalmut-data.json`
    - `git commit -m "הוספת/עדכון השתלמויות"`
    - `git push`
 

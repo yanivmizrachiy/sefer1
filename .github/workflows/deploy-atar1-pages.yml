@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "ATAR1/**"
+      - "HISHTALMUT1/**"
       - ".github/workflows/deploy-atar1-pages.yml"
   workflow_dispatch: {}
 

@@ -7,6 +7,8 @@
 ## קבצים
 
 - `index.html` – העמוד הראשי
+- `hishtalmut.html` – עמוד ההשתלמויות
+- `hishtalmut-data.json` – נתוני ההשתלמויות (נטענים ע"י `hishtalmut.html`)
 - `styles.css` – עיצוב
 
 ## איך מריצים מקומית
