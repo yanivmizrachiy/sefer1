@@ -93,3 +93,106 @@ body{
 @media (prefers-reduced-motion: reduce){
   .cta{ transition:none; }
 }
+
+/* Layout + components used by pages */
+.page{
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+.page__header{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin: 8px 0 16px;
+}
+.page__title{
+  margin:0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.15;
+}
+.page__back{
+  font-size: 0.95rem;
+  color: #93c5fd;
+  text-decoration:none;
+}
+.page__back:hover{ text-decoration:underline; }
+
+.card{
+  max-width: 880px;
+  margin: 24px auto 0;
+  padding: 18px 18px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.10), transparent 55%),
+    rgba(15, 23, 42, 0.78);
+  box-shadow: var(--shadow);
+}
+.card--page{ max-width: 960px; }
+.card__title{
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  color: #e5e7eb;
+}
+.card__text{
+  margin: 0 0 10px;
+  color: #cbd5f5;
+  line-height: 1.6;
+}
+.card__actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top: 12px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  text-decoration:none;
+  color: var(--fg);
+  background: rgba(255,255,255,0.06);
+}
+.btn:hover{
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(148, 163, 184, 0.55);
+}
+.btn:focus-visible{
+  outline: 3px solid rgba(124,240,255,.55);
+  outline-offset: 3px;
+}
+.btn--primary{
+  border-color: rgba(124,240,255,.45);
+  background: linear-gradient(90deg, rgba(124,240,255,.18), rgba(183,120,255,.16));
+}
+.btn--ghost{
+  background: rgba(255,255,255,0.04);
+}
+
+.list{
+  margin: 0 0 12px;
+  padding-inline-start: 20px;
+  color: #cbd5f5;
+  line-height: 1.7;
+}
+.code{
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(2, 6, 23, 0.55);
+  overflow:auto;
+}
+.link{
+  color: #93c5fd;
+  text-decoration: none;
+}
+.link:hover{ text-decoration: underline; }

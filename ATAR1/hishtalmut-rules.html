@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#061b3a" />
+
+    <title>כללי ההשתלמויות</title>
+    <meta name="description" content="כללים ודרישות לנתוני ההשתלמויות באתר" />
+
+    <link rel="stylesheet" href="./styles.css?v=1" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <main class="page">
+      <header class="page__header">
+        <h1 class="page__title">כללי ההשתלמויות</h1>
+        <a class="page__back" href="./index.html">← חזרה לעמוד הראשי</a>
+      </header>
+
+      <div class="card card--page">
+        <p class="card__text">
+          נתוני ההשתלמויות נטענים מקובץ JSON שמופץ עם האתר:
+          <code>ATAR1/hishtalmut-data.json</code>.
+        </p>
+
+        <h2 class="card__title">מבנה רשומה</h2>
+        <p class="card__text">כל השתלמות היא אובייקט במערך JSON עם שדות מומלצים/חובה.</p>
+        <pre class="code"><code>{
+  "title": "שם ההשתלמות",
+  "month": "מרץ",
+  "dayOfMonth": 13,
+  "weekday": "יום שני",
+  "timeRange": "19:30–22:00",
+  "hoursTotal": 2.5,
+  "category": "סיווג ראשי",
+  "tags": ["תגית 1", "תגית 2"]
+}</code></pre>
+
+        <h2 class="card__title">כללים קצרים</h2>
+        <ul class="list">
+          <li><strong>אין טקסטי דמו/טיוטה</strong> בשמות ההשתלמויות או בתגיות.</li>
+          <li><strong>אחרי שינוי נתונים</strong>: לבצע <code>git commit</code> ואז <code>git push</code>.</li>
+          <li><strong>בדיקה</strong>: לפתוח את <a class="link" href="./hishtalmut.html">דף ההשתלמויות</a> ולוודא שהטבלה נטענת.</li>
+        </ul>
+
+        <div class="card__actions">
+          <a class="btn btn--primary" href="./hishtalmut.html">לדף ההשתלמויות</a>
+          <a class="btn btn--ghost" href="./rules.html">כללי הפרויקט</a>
+          <a class="btn btn--ghost" href="./about.html">אודות</a>
+        </div>
+      </div>
+    </main>
+
+    <a
+      class="cta"
+      href="https://github.com/yanivmizrachiy"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="קישור חיצוני"
+    >
+      <span class="cta__icon" aria-hidden="true">↗</span>
+    </a>
+  </body>
+</html>
+
