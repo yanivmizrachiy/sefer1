@@ -1,0 +1,36 @@
+{
+  "task.allowAutomaticTasks": "on",
+
+  "workbench.startupEditor": "readme",
+  "workbench.tips.enabled": false,
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "update.showReleaseNotes": false,
+  "workbench.editor.restoreViewState": true,
+  "workbench.editor.enablePreview": false,
+
+  "window.restoreWindows": "all",
+
+  "editor.fontSize": 16,
+  "editor.lineHeight": 24,
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "editor.renderWhitespace": "selection",
+
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 700,
+
+  "markdown.preview.breaks": true,
+  "markdown.preview.typographer": true,
+
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true
+  },
+
+  "workbench.colorTheme": "Default Light+",
+
+  "debug.openDebug": "never"
+}

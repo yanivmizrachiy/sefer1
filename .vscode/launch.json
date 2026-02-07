@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "devUrl",
+      "type": "promptString",
+      "description": "Paste the DEV URL printed by the task (DEV_SERVER_READY ...)",
+      "default": "http://127.0.0.1:5500/ATAR1/index.html"
+    }
+  ],
+  "configurations": [
+    {
+      "name": "(Optional) Debug in Chrome",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "${input:devUrl}",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "DEV: Persistent Mode (serve + external browser + VS Code Simple Browser)",
+      "runtimeArgs": [
+        "--new-window"
+      ],
+      "userDataDir": false
+    }
+  ]
+}
