@@ -6,7 +6,7 @@ on:
     paths:
       - "ATAR1/**"
       - "HISHTALMUT1/**"
-      - ".github/workflows/deploy-atar1-pages.yml"
+      - ".github/workflows/פריסה-לגיטהאב-פייגס.yml"
   workflow_dispatch: {}
 
 permissions:

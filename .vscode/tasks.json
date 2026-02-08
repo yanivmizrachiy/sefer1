@@ -10,7 +10,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}\\tools\\setup-git-hooks.ps1"
+        "${workspaceFolder}\\tools\\הגדרת-ווים-גיט.ps1"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -33,7 +33,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}\\tools\\persistent-dev.ps1"
+        "${workspaceFolder}\\tools\\פיתוח-מתמשך.ps1"
       ],
       "isBackground": true,
       "problemMatcher": [],
