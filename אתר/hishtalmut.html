@@ -43,10 +43,10 @@
         </table>
       </div>
 
-      <p id="state-empty" class="state" style="display: none">
+      <p id="state-empty" class="state" hidden>
         עדיין לא הוגדרו נתוני השתלמויות ב-<code>אתר/hishtalmut-data.json</code>.
       </p>
-      <p id="state-error" class="state state--error" style="display: none">
+      <p id="state-error" class="state state--error" hidden>
         לא ניתן היה לטעון את נתוני ההשתלמויות. ודא שהקובץ
         <code>אתר/hishtalmut-data.json</code> קיים ותקין.
       </p>
@@ -58,11 +58,14 @@
         const emptyState = document.getElementById("state-empty");
         const errorState = document.getElementById("state-error");
 
+        emptyState.hidden = true;
+        errorState.hidden = true;
+
         try {
           const res = await fetch("./hishtalmut-data.json?cacheBust=" + Date.now());
           if (!res.ok) {
             if (res.status === 404) {
-              emptyState.style.display = "block";
+              emptyState.hidden = false;
               return;
             }
             throw new Error("HTTP " + res.status);
@@ -70,7 +73,7 @@
 
           const data = await res.json();
           if (!Array.isArray(data) || data.length === 0) {
-            emptyState.style.display = "block";
+            emptyState.hidden = false;
             return;
           }
 
@@ -123,7 +126,7 @@
           });
         } catch (err) {
           console.error("Failed to load hishtalmut data", err);
-          errorState.style.display = "block";
+          errorState.hidden = false;
         }
       }
 
