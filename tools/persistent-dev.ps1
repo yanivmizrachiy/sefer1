@@ -3,7 +3,8 @@ param(
   [string]$HostAddr = '127.0.0.1',
   # Keep this URL-encoded so Windows PowerShell codepages won't break Hebrew paths.
   [string]$StartPath = '/%D7%90%D7%AA%D7%A8/index.html',
-  [int]$WaitMs = 100
+  [int]$WaitMs = 100,
+  [int]$ReopenIntervalSec = 20
 )
 
 $ErrorActionPreference = 'Stop'
@@ -33,4 +34,4 @@ if (-not $target) {
   throw 'Missing target script (could not locate a dev script containing DEV_SERVER_READY).'
 }
 
-& $target -HostAddr $HostAddr -StartPath $StartPath -WaitMs $WaitMs
+& $target -HostAddr $HostAddr -StartPath $StartPath -WaitMs $WaitMs -ReopenIntervalSec $ReopenIntervalSec

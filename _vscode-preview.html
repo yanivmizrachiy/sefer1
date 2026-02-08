@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VS Code Preview</title>
+    <style>
+      html, body { height: 100%; margin: 0; }
+      iframe { width: 100%; height: 100%; border: 0; }
+    </style>
+  </head>
+  <body>
+    <iframe id="frame" src="about:blank" referrerpolicy="no-referrer"></iframe>
+
+    <script>
+      (function () {
+        const DEFAULT_TARGET = '/%D7%90%D7%AA%D7%A8/index.html';
+        const REFRESH_MS = 1000;
+
+        function getTargetPath() {
+          // Expect URL-encoded path in hash, e.g. #/%D7%90%D7%AA%D7%A8/index.html
+          const hash = window.location.hash || '';
+          const raw = hash.startsWith('#') ? hash.slice(1) : hash;
+          if (raw && raw.startsWith('/')) return raw;
+          return DEFAULT_TARGET;
+        }
+
+        function withCacheBust(path) {
+          const sep = path.includes('?') ? '&' : '?';
+          return path + sep + '__vscode_refresh=' + Date.now();
+        }
+
+        const frame = document.getElementById('frame');
+        let lastPath = '';
+
+        function refresh() {
+          const path = getTargetPath();
+          if (path !== lastPath) {
+            lastPath = path;
+          }
+          frame.src = withCacheBust(lastPath);
+        }
+
+        refresh();
+        setInterval(refresh, REFRESH_MS);
+      })();
+    </script>
+  </body>
+</html>

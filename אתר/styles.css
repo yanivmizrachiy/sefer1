@@ -10,6 +10,8 @@
   --border:rgba(255,255,255,.10);
   --shadow: 0 20px 60px rgba(0,0,0,.45);
   --r:24px;
+  --todoBg: rgba(255, 243, 128, 0.96);
+  --todoFg: rgba(6, 27, 58, 0.95);
 }
 
 *{ box-sizing:border-box; }
@@ -37,22 +39,207 @@ body{
   opacity:.9;
 }
 
-.top{
-  max-width: 1040px;
-  margin: clamp(28px, 4vw, 44px) auto 0;
-  padding: 0 18px;
-  text-align:right;
-}
-.title{
-  margin:0;
-  font-size: clamp(34px, 5vw, 56px);
-  letter-spacing: .2px;
-  line-height: 1.06;
-  text-shadow: 0 14px 40px rgba(0,0,0,.55);
-}
- 
 .wrap{
-  min-height: calc(100vh - 88px);
+  min-height: 100vh;
+}
+
+.home-grid{
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 10px 18px 26px;
+  display: grid;
+  grid-template-columns: minmax(380px, 34vw) minmax(0, 1fr);
+  gap: 18px;
+  align-items: stretch;
+  direction: ltr;
+}
+
+.home-grid > *{ direction: rtl; }
+
+/* Weekly journal (home page) */
+.week-journal{
+  margin-top: 12px;
+}
+.week-journal__head{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.week-journal__title{
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #e5e7eb;
+}
+.week-journal__row{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.week-journal .cal__cell{
+  min-height: 640px;
+  padding: 18px;
+}
+.week__cell{
+  flex: 1;
+  min-width: 220px;
+  justify-content: space-between;
+}
+.week__top{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+.week__name{
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+.week__day{
+  font-weight: 900;
+  font-size: 2.4rem;
+}
+.week__iso{
+  margin-top: 8px;
+  font-size: 1.05rem;
+  opacity: 0.9;
+  color: rgba(6, 27, 58, 0.78);
+}
+
+@media (max-width: 920px){
+  .week-journal .cal__cell{ min-height: 340px; }
+}
+
+.home-grid .card{
+  margin: 24px 0 0;
+  max-width: none;
+}
+
+.home-grid__full{
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+@media (max-width: 920px){
+  .home-grid{ grid-template-columns: minmax(320px, 46vw) minmax(0, 1fr); }
+}
+
+.todo{
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: var(--todoBg);
+  color: var(--todoFg);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+}
+
+.todo__title{
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.todo__meta{
+  margin: 0 0 12px;
+  font-size: 0.92rem;
+}
+
+.todo__form{ margin: 0 0 12px; }
+
+.todo__label{
+  display: block;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.todo__row{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.todo__input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 27, 58, 0.25);
+  background: rgba(255,255,255,0.78);
+  color: rgba(6, 27, 58, 0.98);
+  font: inherit;
+}
+
+.todo__input::placeholder{ color: rgba(6, 27, 58, 0.55); }
+
+.todo__input:focus-visible{
+  outline: 3px solid rgba(183,120,255,.45);
+  outline-offset: 2px;
+}
+
+.todo__list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.todo__item{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(6, 27, 58, 0.18);
+  background: rgba(255,255,255,0.72);
+}
+
+.todo__label-row{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.todo__check{ width: 18px; height: 18px; }
+
+.todo__text{
+  font-weight: 700;
+  color: rgba(6, 27, 58, 0.98);
+}
+
+.todo__text--done{
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+.todo .btn{
+  border-color: rgba(6, 27, 58, 0.25);
+  color: rgba(6, 27, 58, 0.95);
+  background: rgba(255,255,255,0.45);
+}
+
+.todo .btn:hover{
+  background: rgba(255,255,255,0.62);
+}
+
+.todo .btn--primary{
+  border-color: rgba(6, 27, 58, 0.25);
+  background: linear-gradient(90deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
 }
 
 .cta{
@@ -123,6 +310,13 @@ body{
   margin: 0 0 16px;
   color: #9ca3af;
   font-size: 0.95rem;
+}
+
+.site-nav{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 16px;
 }
 
 /* Hishtalmut table */
@@ -197,13 +391,14 @@ tbody tr:nth-child(odd){
 .card--page{ max-width: 960px; }
 .card__title{
   margin: 0 0 10px;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #e5e7eb;
 }
 .card__text{
   margin: 0 0 10px;
   color: #cbd5f5;
   line-height: 1.6;
+  font-size: 1.05rem;
 }
 .card__actions{
   display:flex;
@@ -223,6 +418,10 @@ tbody tr:nth-child(odd){
   text-decoration:none;
   color: var(--fg);
   background: rgba(255,255,255,0.06);
+  appearance: none;
+  -webkit-appearance: none;
+  font: inherit;
+  cursor: pointer;
 }
 .btn:hover{
   background: rgba(255,255,255,0.09);
@@ -259,3 +458,132 @@ tbody tr:nth-child(odd){
   text-decoration: none;
 }
 .link:hover{ text-decoration: underline; }
+
+/* Monthly journal (home page) */
+.month-journal{
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 14px;
+  direction: ltr;
+}
+.month-journal__controls{
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.month-journal__main{
+  direction: rtl;
+}
+.month-journal__title{
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  color: #e5e7eb;
+}
+
+.cal{
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(2, 6, 23, 0.50);
+  padding: 12px;
+}
+.cal__header{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cal__dow{
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--bg1);
+  padding: 9px 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+.cal__grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.cal__cell{
+  min-height: 128px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(255,255,255,0.92);
+  color: var(--bg1);
+  text-decoration: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 12px;
+}
+
+.cal__cell--shabbat{
+  border-color: rgba(183,120,255,0.45);
+  background:
+    linear-gradient(180deg, rgba(183,120,255,0.18), rgba(183,120,255,0.14)),
+    rgba(255,255,255,0.92);
+}
+.cal__cell--empty{
+  border-color: transparent;
+  background: transparent;
+}
+.cal__cell:hover{
+  background: rgba(255,255,255,0.98);
+  border-color: rgba(148, 163, 184, 0.45);
+}
+.cal__cell:focus-visible{
+  outline: 3px solid rgba(124,240,255,.55);
+  outline-offset: 2px;
+}
+.cal__cell--today{
+  border-color: rgba(34,197,94,.55);
+  background:
+    linear-gradient(180deg, rgba(34,197,94,0.20), rgba(34,197,94,0.12)),
+    rgba(255,255,255,0.92);
+}
+
+.cal__cell--today.cal__cell--shabbat{
+  border-color: rgba(34,197,94,.62);
+  background:
+    linear-gradient(180deg, rgba(34,197,94,0.22), rgba(34,197,94,0.14)),
+    rgba(255,255,255,0.92);
+}
+.cal__day{
+  font-weight: 700;
+  font-size: 1.12rem;
+}
+
+@media (max-width: 720px){
+  .month-journal{
+    grid-template-columns: 1fr;
+  }
+  .month-journal__controls{
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .cal__cell{
+    min-height: 96px;
+  }
+  .cal__dow{
+    font-size: 0.84rem;
+    padding: 8px 0;
+  }
+}
+
+/* Buttons in journal (and the month journal controls) should be tighter and less bright */
+.page--journal .btn,
+.month-journal .btn{
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.035);
+}
+.page--journal .btn:hover,
+.month-journal .btn:hover{
+  background: rgba(255,255,255,0.055);
+}

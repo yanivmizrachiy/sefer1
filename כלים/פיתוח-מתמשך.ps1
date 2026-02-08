@@ -4,7 +4,10 @@ param(
   # Use URL-encoded path so this script works reliably in Windows PowerShell
   # even when the file is interpreted with a legacy codepage.
   [string]$StartPath = '/%D7%90%D7%AA%D7%A8/index.html',
-  [int]$WaitMs = 100
+  [int]$WaitMs = 100,
+  # Re-open the VS Code Simple Browser periodically to keep the live preview visible
+  # even if the user accidentally closes the tab.
+  [int]$ReopenIntervalSec = 20
 )
 
 $ErrorActionPreference = 'Stop'
@@ -31,15 +34,23 @@ function Test-PortFree([int]$Port) {
 
 function Open-ExternalBrowser([string]$Url) {
   # `start` treats the first quoted argument as a window title; use "" explicitly (not an empty PowerShell string).
-  Start-Process 'cmd' -ArgumentList @('/c', 'start', '""', $Url) | Out-Null
+  try {
+    Start-Process 'cmd' -ArgumentList @('/c', 'start', '""', $Url) | Out-Null
+  } catch {
+    Write-Host "WARN_EXTERNAL_BROWSER_OPEN_FAILED $Url"
+  }
 }
 
 function Open-VSCodeSimpleBrowser([string]$Url) {
   # Command URIs pass arguments as a JSON-encoded array.
   # simpleBrowser.show expects the URL as its first argument.
-  $json = ConvertTo-Json @($Url) -Compress
-  $encoded = [System.Uri]::EscapeDataString($json)
-  Start-Process ("vscode://command/simpleBrowser.show?$encoded") | Out-Null
+  try {
+    $json = ConvertTo-Json @($Url) -Compress
+    $encoded = [System.Uri]::EscapeDataString($json)
+    Start-Process ("vscode://command/simpleBrowser.show?$encoded") | Out-Null
+  } catch {
+    Write-Host "WARN_SIMPLE_BROWSER_OPEN_FAILED $Url"
+  }
 }
 
 function Wait-HttpReady([string]$Url, [int]$MaxTries = 80, [int]$DelayMs = 200) {
@@ -71,7 +82,10 @@ function Start-LiveServerProcess([int]$Port) {
 function Announce-And-Open([string]$Url) {
   Write-Host "DEV_SERVER_READY $Url"
   Open-ExternalBrowser -Url $Url
-  Open-VSCodeSimpleBrowser -Url $Url
+  # Simple Browser doesn't always support live-server's live reload.
+  # Open an auto-refreshing wrapper page that embeds the actual target.
+  $simpleUrl = "http://$HostAddr`:$port/_vscode-preview.html#$StartPath"
+  Open-VSCodeSimpleBrowser -Url $simpleUrl
 }
 
 # Outer loop: always keep a server running; if port changes, re-open previews.
@@ -86,6 +100,7 @@ while ($true) {
     }
 
     $url = "http://$HostAddr`:$port$StartPath"
+    $simpleUrl = "http://$HostAddr`:$port/_vscode-preview.html#$StartPath"
     Write-Host "Starting persistent dev server on $url"
 
     $proc = Start-LiveServerProcess -Port $port
@@ -102,16 +117,29 @@ while ($true) {
 
   # Keep the server alive on the same port; if that stops working, select a new port.
   while ($true) {
-    Wait-Process -Id $proc.Id
+    $nextReopen = (Get-Date).AddSeconds([Math]::Max(5, $ReopenIntervalSec))
+
+    while (-not $proc.HasExited) {
+      if ($ReopenIntervalSec -gt 0 -and (Get-Date) -ge $nextReopen) {
+        Open-VSCodeSimpleBrowser -Url $simpleUrl
+        $nextReopen = (Get-Date).AddSeconds([Math]::Max(5, $ReopenIntervalSec))
+      }
+      Start-Sleep -Seconds 1
+    }
+
     Start-Sleep -Seconds 1
 
     $url = "http://$HostAddr`:$port$StartPath"
+    $simpleUrl = "http://$HostAddr`:$port/_vscode-preview.html#$StartPath"
     Write-Host "live-server exited. Restarting on $url"
 
     $proc = Start-LiveServerProcess -Port $port
 
     if (Wait-HttpReady -Url $url -MaxTries 40 -DelayMs 250) {
       Write-Host "DEV_SERVER_READY $url"
+      if ($ReopenIntervalSec -gt 0) {
+        Open-VSCodeSimpleBrowser -Url $simpleUrl
+      }
       continue
     }
 

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#061b3a">
+
+    <title>יומן חודשי</title>
+    <meta name="description" content="יומן חודשי – תצוגת חודש עם קישור לעמוד יומי">
+
+    <link rel="stylesheet" href="./styles.css?v=1">
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <main class="page page--journal">
+      <header class="page__header">
+        <h1 class="page__title">יומן חודשי</h1>
+        <a class="page__back" href="./index.html">← חזרה לעמוד הראשי</a>
+      </header>
+
+      <nav class="site-nav" aria-label="ניווט בין דפי האתר">
+        <a class="btn" href="./index.html">עמוד כניסה</a>
+        <a class="btn" href="./hishtalmut.html">השתלמויות</a>
+        <a class="btn" href="./שיעורים-פרטיים.html">שיעורים פרטיים</a>
+        <a class="btn btn--primary" href="./יומן.html">יומן</a>
+        <a class="btn" href="./about.html">אודות</a>
+      </nav>
+
+      <div class="card card--page">
+        <p class="card__text">
+          תצוגה חודשית של היומן. לחיצה על יום פותחת עמוד יומי מסונכרן.
+        </p>
+
+        <div class="month-journal month-journal--page" id="monthJournal" data-owner="yanivmizrachiy" data-repo="sefer1" data-branch="main">
+          <div class="month-journal__controls" aria-label="כפתורי מעבר בין חודשים">
+            <button class="btn btn--ghost" type="button" data-action="prev">← חודש קודם</button>
+            <button class="btn btn--ghost" type="button" data-action="today">היום</button>
+            <button class="btn btn--ghost" type="button" data-action="next">חודש הבא →</button>
+            <a class="btn" href="./index.html">לתצוגה שבועית</a>
+          </div>
+
+          <div class="month-journal__main">
+            <div class="month-journal__title" id="monthTitle" aria-live="polite"></div>
+            <div class="cal" role="group" aria-label="לוח חודש">
+              <div class="cal__header" aria-hidden="true">
+                <div class="cal__dow">ראשון</div>
+                <div class="cal__dow">שני</div>
+                <div class="cal__dow">שלישי</div>
+                <div class="cal__dow">רביעי</div>
+                <div class="cal__dow">חמישי</div>
+                <div class="cal__dow">שישי</div>
+                <div class="cal__dow">שבת</div>
+              </div>
+              <div class="cal__grid" id="calGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <a
+      class="cta"
+      href="https://github.com/yanivmizrachiy"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="קישור חיצוני"
+    >
+      <span class="cta__icon" aria-hidden="true">↗</span>
+    </a>
+
+    <script defer src="./index-journal.js?v=1"></script>
+  </body>
+</html>

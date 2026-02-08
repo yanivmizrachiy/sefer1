@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#061b3a">
+
+    <title>יומן יומי</title>
+    <meta name="description" content="יומן יומי – רשימת commits לפי יום">
+
+    <link rel="stylesheet" href="./styles.css?v=1">
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <main class="page page--journal">
+      <header class="page__header">
+        <h1 class="page__title" id="dayTitle">יומן יומי</h1>
+        <a class="page__back" href="./index.html">← חזרה לעמוד הראשי</a>
+      </header>
+
+      <nav class="site-nav" aria-label="ניווט בין דפי האתר">
+        <a class="btn" href="./index.html">עמוד כניסה</a>
+        <a class="btn" href="./hishtalmut.html">השתלמויות</a>
+        <a class="btn" href="./שיעורים-פרטיים.html">שיעורים פרטיים</a>
+        <a class="btn btn--primary" href="./יומן.html">יומן</a>
+        <a class="btn" href="./about.html">אודות</a>
+      </nav>
+
+      <p class="page__meta" id="dayMeta"></p>
+
+      <div class="card card--page">
+        <p id="state-loading" class="state">טוען commits…</p>
+        <p id="state-empty" class="state" hidden>לא נמצאו commits לתאריך הזה.</p>
+        <p id="state-error" class="state state--error" hidden>לא ניתן היה לטעון את ה־commits כרגע.</p>
+
+        <ul class="list" id="commitList"></ul>
+
+        <div class="card__actions">
+          <a class="btn" id="dayPrev" href="#">← יום קודם</a>
+          <a class="btn btn--ghost" id="dayToday" href="#">היום</a>
+          <a class="btn" id="dayNext" href="#">יום הבא →</a>
+          <a class="btn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">חודשי</a>
+          <a class="btn" href="./index.html">שבועי</a>
+        </div>
+      </div>
+    </main>
+
+    <a
+      class="cta"
+      href="https://github.com/yanivmizrachiy"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="קישור חיצוני"
+    >
+      <span class="cta__icon" aria-hidden="true">↗</span>
+    </a>
+
+    <script defer src="./journal-day.js?v=1"></script>
+  </body>
+</html>

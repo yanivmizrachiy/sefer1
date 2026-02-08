@@ -51,21 +51,51 @@
       </svg>
     </div>
 
-    <header class="top">
-      <h1 class="title">האתר של יניב רז</h1>
-    </header>
+    <main class="wrap">
+      <div class="home-grid">
+        <div class="card home-grid__full">
+          <h2 class="card__title">ניווט באתר</h2>
+          <div class="card__actions">
+            <a class="btn btn--primary" href="./hishtalmut.html">ההשתלמויות שלי</a>
+            <a class="btn" href="./שיעורים-פרטיים.html">שיעורים פרטיים</a>
+            <a class="btn" href="./יומן.html">יומן</a>
+            <a class="btn btn--ghost" href="./about.html">אודות</a>
+          </div>
+        </div>
 
-    <main class="wrap" aria-hidden="true">
-      <div class="card">
-        <h2 class="card__title">ניווט באתר</h2>
-        <p class="card__text">
-          מכאן ניתן להגיע לעמוד ההשתלמויות ולדפי מידע נוספים באתר של יניב רז.
-        </p>
-        <div class="card__actions">
-          <a class="btn btn--primary" href="./hishtalmut.html">ההשתלמויות שלי</a>
-          <a class="btn" href="./שיעורים-פרטיים.html">שיעורים פרטיים</a>
-          <a class="btn" href="./יומן.html">יומן</a>
-          <a class="btn btn--ghost" href="./about.html">אודות</a>
+        <aside class="todo" aria-label="משימות לביצוע">
+          <h2 class="todo__title">משימות לביצוע</h2>
+          <p class="todo__meta">נשמר מקומית בדפדפן (שמירה אמיתית).</p>
+
+          <form class="todo__form" id="todoForm">
+            <label class="todo__label" for="todoInput">משימה חדשה</label>
+            <div class="todo__row">
+              <input
+                class="todo__input"
+                id="todoInput"
+                name="todo"
+                type="text"
+                inputmode="text"
+                autocomplete="off"
+                placeholder="כתוב משימה…"
+              />
+              <button class="btn btn--primary" type="submit">הוספה</button>
+            </div>
+          </form>
+
+          <p id="todoEmpty" class="state" hidden>אין משימות כרגע.</p>
+          <ul class="todo__list" id="todoList"></ul>
+        </aside>
+
+        <div class="card">
+          <h2 class="card__title">יומן שבועי</h2>
+          <div class="week-journal" id="weekJournal" data-owner="yanivmizrachiy" data-repo="sefer1" data-branch="main">
+            <div class="week-journal__head">
+              <div class="week-journal__title" id="weekTitle" aria-live="polite"></div>
+              <a class="btn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">תצוגה חודשית</a>
+            </div>
+            <div class="week-journal__row" id="weekRow" role="group" aria-label="7 ימים"></div>
+          </div>
         </div>
       </div>
     </main>
@@ -79,5 +109,8 @@
     >
       <span class="cta__icon" aria-hidden="true">↗</span>
     </a>
+
+    <script defer src="./week-journal.js?v=1"></script>
+    <script defer src="./todo.js?v=1"></script>
   </body>
 </html>

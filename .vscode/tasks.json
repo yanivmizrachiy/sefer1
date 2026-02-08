@@ -34,10 +34,12 @@
         "Bypass",
         "-File",
         "${workspaceFolder}\\tools\\persistent-dev.ps1",
-        "-StartPath",
-        "/%D7%90%D7%AA%D7%A8/index.html"
+         "-StartPath",
+         "/%D7%90%D7%AA%D7%A8/index.html",
+         "-ReopenIntervalSec",
+         "20"
       ],
-      "isBackground": true,
+      "isBackground": false,
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
