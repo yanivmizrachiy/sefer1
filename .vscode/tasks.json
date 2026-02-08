@@ -33,7 +33,9 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}\\כלים\\פיתוח-מתמשך.ps1"
+        "${workspaceFolder}\\כלים\\פיתוח-מתמשך.ps1",
+        "-StartPath",
+        "/%D7%90%D7%AA%D7%A8/index.html"
       ],
       "isBackground": true,
       "problemMatcher": [],
