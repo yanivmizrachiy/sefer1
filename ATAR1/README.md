@@ -13,7 +13,11 @@
 
 ## איך מריצים מקומית
 
-פתח את `ATAR1/index.html` בדפדפן.
+מומלץ להריץ דרך VS Code כדי לקבל תצוגה חיה שמתעדכנת מייד בתוך חלון פנימי (Simple Browser):
+
+- Terminal → Run Task… → `DEV: Persistent Mode (serve + external browser + VS Code Simple Browser)`
+
+אפשר גם לפתוח את `ATAR1/index.html` בדפדפן, אבל זה לא כולל תצוגה חיה קבועה.
 
 ## קישור חיצוני
 

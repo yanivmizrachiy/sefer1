@@ -2,6 +2,29 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "SETUP: Git hooks (auto-push after commit)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\tools\\setup-git-hooks.ps1"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "focus": false,
+        "panel": "dedicated",
+        "clear": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+        "reevaluateOnRerun": true
+      }
+    },
+    {
       "label": "DEV: Persistent Mode (serve + external browser + VS Code Simple Browser)",
       "type": "shell",
       "command": "powershell",

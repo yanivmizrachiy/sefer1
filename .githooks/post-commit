@@ -1,0 +1,22 @@
+#!/bin/sh
+# Auto-push after each commit (current branch).
+# This keeps GitHub as the single source of truth without auto-committing every file change.
+
+set -e
+
+branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo HEAD)"
+if [ "$branch" = "HEAD" ]; then
+  echo "post-commit: detached HEAD, skipping push"
+  exit 0
+fi
+
+if ! git remote get-url origin >/dev/null 2>&1; then
+  echo "post-commit: no 'origin' remote, skipping push"
+  exit 0
+fi
+
+echo "post-commit: pushing to origin/$branch"
+# Don't block the commit workflow if push fails; just report.
+if ! git push origin "$branch"; then
+  echo "post-commit: push failed (fix auth/network and run 'git push')"
+fi
