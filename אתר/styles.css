@@ -96,29 +96,92 @@ body{
 
 /* Layout + components used by pages */
 .page{
-  max-width: 1040px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
+  padding: 24px 16px 40px;
 }
 .page__header{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   gap:12px;
-  margin: 8px 0 16px;
+  margin-bottom: 16px;
 }
 .page__title{
   margin:0;
-  font-size: clamp(24px, 3vw, 34px);
-  line-height: 1.15;
+  font-size: 1.8rem;
 }
 .page__back{
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #93c5fd;
   text-decoration:none;
 }
 .page__back:hover{ text-decoration:underline; }
+
+.page__meta{
+  margin: 0 0 16px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+/* Hishtalmut table */
+.table-wrap{
+  margin-top: 8px;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.09), transparent 55%),
+    rgba(15, 23, 42, 0.82);
+}
+table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: #e5e7eb;
+}
+thead{
+  background: rgba(15, 23, 42, 0.95);
+}
+th, td{
+  padding: 10px 12px;
+  text-align: right;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+  white-space: nowrap;
+}
+th{
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+tbody tr:nth-child(even){
+  background: rgba(15, 23, 42, 0.75);
+}
+tbody tr:nth-child(odd){
+  background: rgba(15, 23, 42, 0.55);
+}
+.tag{
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  background: rgba(148, 163, 184, 0.25);
+  color: #e5e7eb;
+  margin-inline-start: 4px;
+}
+.tag--main{
+  background: rgba(248, 113, 113, 0.25);
+  color: #fecaca;
+}
+.state{
+  margin-top: 12px;
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+.state--error{
+  color: #fecaca;
+}
 
 .card{
   max-width: 880px;
