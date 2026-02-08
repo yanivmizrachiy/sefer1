@@ -73,14 +73,9 @@
       day.className = 'week__day';
       day.textContent = String(d.getDate());
 
-      const isoSmall = document.createElement('div');
-      isoSmall.className = 'week__iso';
-      isoSmall.textContent = toDayMonth(d);
-
       top.appendChild(name);
       top.appendChild(day);
       a.appendChild(top);
-      a.appendChild(isoSmall);
 
       rowEl.appendChild(a);
     }
