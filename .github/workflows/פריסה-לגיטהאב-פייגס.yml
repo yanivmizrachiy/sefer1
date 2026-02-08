@@ -1,11 +1,10 @@
-name: Deploy ATAR1 to GitHub Pages
+name: Deploy אתר to GitHub Pages
 
 on:
   push:
     branches: ["main"]
     paths:
-      - "ATAR1/**"
-      - "HISHTALMUT1/**"
+      - "אתר/**"
       - ".github/workflows/פריסה-לגיטהאב-פייגס.yml"
   workflow_dispatch: {}
 
@@ -33,10 +32,10 @@ jobs:
         with:
           enablement: true
 
-      - name: Upload Pages artifact (ATAR1)
+      - name: Upload Pages artifact (אתר)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./ATAR1
+          path: ./אתר
 
       - name: Deploy to GitHub Pages
         id: deployment

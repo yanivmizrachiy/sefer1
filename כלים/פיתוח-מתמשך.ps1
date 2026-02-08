@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param(
   [string]$HostAddr = '127.0.0.1',
-  [string]$StartPath = '/ATAR1/index.html',
+  # Use URL-encoded path so this script works reliably in Windows PowerShell
+  # even when the file is interpreted with a legacy codepage.
+  [string]$StartPath = '/%D7%90%D7%AA%D7%A8/index.html',
   [int]$WaitMs = 100
 )
 
@@ -52,7 +54,6 @@ function Wait-HttpReady([string]$Url, [int]$MaxTries = 80, [int]$DelayMs = 200) 
   return $false
 }
 
-$watchArg = '--watch=ATAR1,prompts'
 $comspec = $env:ComSpec
 
 $preferredPort = 5500
@@ -63,8 +64,7 @@ function Start-LiveServerProcess([int]$Port) {
       "--host=$HostAddr",
       "--port=$Port",
       '--no-browser',
-      "--wait=$WaitMs",
-      $watchArg
+      "--wait=$WaitMs"
     ) -NoNewWindow -PassThru
 }
 

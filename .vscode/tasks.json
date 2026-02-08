@@ -10,7 +10,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}\\tools\\הגדרת-ווים-גיט.ps1"
+        "${workspaceFolder}\\כלים\\הגדרת-ווים-גיט.ps1"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -33,7 +33,7 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}\\tools\\פיתוח-מתמשך.ps1"
+        "${workspaceFolder}\\כלים\\פיתוח-מתמשך.ps1"
       ],
       "isBackground": true,
       "problemMatcher": [],

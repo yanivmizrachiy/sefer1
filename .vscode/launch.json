@@ -5,7 +5,7 @@
       "id": "devUrl",
       "type": "promptString",
       "description": "Paste the DEV URL printed by the task (DEV_SERVER_READY ...)",
-      "default": "http://127.0.0.1:5500/ATAR1/index.html"
+      "default": "http://127.0.0.1:5500/%D7%90%D7%AA%D7%A8/index.html"
     }
   ],
   "configurations": [
