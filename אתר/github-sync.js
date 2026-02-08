@@ -1,4 +1,5 @@
 (() => {
+  const GIST_INPUT_ID = 'ghSyncGistId';
   const TOKEN_INPUT_ID = 'ghSyncToken';
   const PULL_BTN_ID = 'ghSyncPull';
   const PUSH_BTN_ID = 'ghSyncPush';
@@ -10,6 +11,7 @@
 
   const FILE_NAME = 'sefer1-sync.json';
 
+  const gistEl = document.getElementById(GIST_INPUT_ID);
   const tokenEl = document.getElementById(TOKEN_INPUT_ID);
   const pullEl = document.getElementById(PULL_BTN_ID);
   const pushEl = document.getElementById(PUSH_BTN_ID);
@@ -31,12 +33,17 @@
     }
   };
 
-  const getGistId = () => {
+  const getStoredGistId = () => {
     try {
       return String(localStorage.getItem(GIST_ID_KEY) || '').trim();
     } catch {
       return '';
     }
+  };
+
+  const getGistId = () => {
+    const fromUi = gistEl ? String(gistEl.value || '').trim() : '';
+    return fromUi || getStoredGistId();
   };
 
   const setGistId = (id) => {
@@ -47,6 +54,14 @@
       return false;
     }
   };
+
+  if (gistEl) {
+    gistEl.value = getStoredGistId();
+    gistEl.addEventListener('input', () => {
+      const v = String(gistEl.value || '').trim();
+      setGistId(v);
+    });
+  }
 
   const listNoteKeys = () => {
     const keys = [];
@@ -186,7 +201,7 @@
 
     const gistId = getGistId();
     if (!gistId) {
-      setStatus('אין מזהה Gist בדפדפן הזה עדיין');
+      setStatus('אין מזהה Gist עדיין הדבק מזהה או בצע שלח כדי ליצור');
       return;
     }
 
@@ -232,7 +247,10 @@
       });
 
       const newId = String(created?.id || '').trim();
-      if (newId) setGistId(newId);
+      if (newId) {
+        setGistId(newId);
+        if (gistEl) gistEl.value = newId;
+      }
       setStatus('נוצר Gist ונשלחו נתונים');
       return;
     }
