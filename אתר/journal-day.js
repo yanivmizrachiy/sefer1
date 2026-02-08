@@ -1,6 +1,9 @@
 (() => {
   const titleEl = document.getElementById('dayTitle');
 
+  const shabbatWrapEl = document.getElementById('dayShabbat');
+  const shabbatLinesEl = document.getElementById('dayShabbatLines');
+
   const notesInputEl = document.getElementById('dayNotesInput');
   const notesSaveEl = document.getElementById('dayNotesSave');
   const notesStatusEl = document.getElementById('dayNotesStatus');
@@ -90,15 +93,24 @@
     }
   };
 
-  const saveNotes = () => {
+  const saveNotes = ({ silent } = {}) => {
     if (!notesInputEl) return;
     try {
       localStorage.setItem(notesKeyFor(isoDate), String(notesInputEl.value || ''));
-      setNotesStatus('נשמר.');
-      window.setTimeout(() => setNotesStatus(''), 1400);
+      if (!silent) {
+        setNotesStatus('נשמר.');
+        window.setTimeout(() => setNotesStatus(''), 1400);
+      }
     } catch {
-      setNotesStatus('לא ניתן לשמור בדפדפן זה.');
+      if (!silent) setNotesStatus('לא ניתן לשמור בדפדפן זה.');
     }
+  };
+
+  let autosaveTimer = 0;
+  const scheduleAutosave = () => {
+    if (!notesInputEl) return;
+    window.clearTimeout(autosaveTimer);
+    autosaveTimer = window.setTimeout(() => saveNotes({ silent: true }), 900);
   };
 
   const dayUrl = (dateIso) => {
@@ -120,7 +132,15 @@
         saveNotes();
       }
     });
+
+    notesInputEl.addEventListener('input', () => scheduleAutosave());
+    notesInputEl.addEventListener('blur', () => saveNotes({ silent: true }));
   }
+
+  window.addEventListener('beforeunload', () => saveNotes({ silent: true }));
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') saveNotes({ silent: true });
+  });
 
   window.addEventListener('storage', (e) => {
     if (!notesInputEl) return;
@@ -142,4 +162,57 @@
 
   document.title = weekday ? `${weekday} — ${dmy}` : dmy;
   loadNotes();
+
+  const renderShabbatInfo = async () => {
+    if (!shabbatWrapEl || !shabbatLinesEl) return;
+
+    const date = parseIsoDate(isoDate);
+    if (!date) return;
+    const dow = date.getDay();
+    const isFriOrSat = dow === 5 || dow === 6;
+    if (!isFriOrSat) {
+      shabbatWrapEl.hidden = true;
+      shabbatLinesEl.replaceChildren();
+      return;
+    }
+
+    const api = window.SeferHebcal;
+    if (!api) return;
+
+    const info = await api.getInfoForIsoDate(isoDate);
+    const parts = [];
+    if (dow === 5 && info.candles) parts.push({ kind: 'candles', label: 'כניסת שבת', value: info.candles });
+    if (dow === 6) {
+      if (info.parasha) parts.push({ kind: 'parasha', label: 'פרשת השבוע', value: info.parasha });
+      if (info.havdalah) parts.push({ kind: 'havdalah', label: 'יציאת שבת', value: info.havdalah });
+    }
+
+    if (!parts.length) {
+      shabbatWrapEl.hidden = true;
+      shabbatLinesEl.replaceChildren();
+      return;
+    }
+
+    shabbatLinesEl.replaceChildren();
+    for (const p of parts) {
+      const row = document.createElement('div');
+      row.className = `hebcalRow hebcalRow--${p.kind}`;
+
+      const label = document.createElement('span');
+      label.className = 'hebcalLabel';
+      label.textContent = `${p.label}`;
+
+      const value = document.createElement('span');
+      value.className = 'hebcalValue';
+      value.textContent = String(p.value || '').trim();
+
+      row.appendChild(label);
+      row.appendChild(document.createTextNode(' '));
+      row.appendChild(value);
+      shabbatLinesEl.appendChild(row);
+    }
+    shabbatWrapEl.hidden = false;
+  };
+
+  renderShabbatInfo();
 })();

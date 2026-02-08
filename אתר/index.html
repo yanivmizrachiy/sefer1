@@ -59,11 +59,30 @@
             <a class="btn btn--primary" href="./hishtalmut.html">ההשתלמויות שלי</a>
             <a class="btn" href="./שיעורים-פרטיים.html">שיעורים פרטיים</a>
             <a class="btn" href="./יומן.html">יומן</a>
+            <button class="btn" id="todoToggle" type="button" aria-controls="todoPanel" aria-expanded="false">משימות</button>
             <a class="btn btn--ghost" href="./about.html">אודות</a>
           </div>
         </div>
 
-        <aside class="todo" aria-label="משימות לביצוע">
+        <div class="card">
+          <div class="week-journal" id="weekJournal" data-owner="yanivmizrachiy" data-repo="sefer1" data-branch="main">
+            <div class="week-journal__head">
+              <div class="week-journal__title" id="weekTitle" aria-live="polite"></div>
+              <div class="week-journal__actions">
+                <a class="btn btn--week-prev" id="weekPrevBtn" href="./index.html?weekOffset=-1" aria-label="שבוע קודם">→ שבוע קודם</a>
+                <a class="btn btn--week-next" id="weekNextBtn" href="./index.html?weekOffset=1" aria-label="שבוע הבא">שבוע הבא ←</a>
+                <a class="btn btn--warning" id="weekDailyBtn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?date=today&amp;owner=yanivmizrachiy&amp;repo=sefer1&amp;branch=main">תצוגה יומית</a>
+                <a class="btn btn--danger" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">תצוגה חודשית</a>
+              </div>
+            </div>
+              <div class="week-journal__row" id="weekRow" role="group" aria-label="7 ימים"></div>
+              <div class="week-journal__credit" id="hebcalCredit" hidden>
+                זמני שבת ופרשת שבוע <a href="https://www.hebcal.com/" target="_blank" rel="noopener noreferrer">Hebcal.com</a>
+              </div>
+          </div>
+        </div>
+
+        <section class="todo" id="todoPanel" aria-label="משימות לביצוע" hidden>
           <h2 class="todo__title">משימות לביצוע</h2>
           <form class="todo__form" id="todoForm">
             <label class="todo__label" for="todoInput">משימה חדשה</label>
@@ -83,20 +102,29 @@
 
           <p id="todoEmpty" class="state" hidden>אין משימות כרגע.</p>
           <ul class="todo__list" id="todoList"></ul>
-        </aside>
 
-        <div class="card">
-          <div class="week-journal" id="weekJournal" data-owner="yanivmizrachiy" data-repo="sefer1" data-branch="main">
-            <div class="week-journal__head">
-              <div class="week-journal__title" id="weekTitle" aria-live="polite"></div>
-              <div class="week-journal__actions">
-                <a class="btn btn--warning" id="weekDailyBtn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?date=today&amp;owner=yanivmizrachiy&amp;repo=sefer1&amp;branch=main">תצוגה יומית</a>
-                <a class="btn btn--danger" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">תצוגה חודשית</a>
-              </div>
+          <section class="sync" aria-label="סנכרון GitHub">
+            <h3 class="sync__title">סנכרון GitHub</h3>
+            <p class="sync__hint">סנכרון אמיתי בין מכשירים דרך Gist פרטי</p>
+
+            <label class="sync__label" for="ghSyncToken">Token</label>
+            <input
+              class="sync__input"
+              id="ghSyncToken"
+              type="password"
+              inputmode="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="הדבק token עם הרשאת gist"
+            />
+
+            <div class="sync__actions">
+              <button class="btn btn--ghost" type="button" id="ghSyncPull">קבל מגיטהאב</button>
+              <button class="btn btn--primary" type="button" id="ghSyncPush">שלח לגיטהאב</button>
+              <span class="state" id="ghSyncStatus" aria-live="polite" hidden></span>
             </div>
-            <div class="week-journal__row" id="weekRow" role="group" aria-label="7 ימים"></div>
-          </div>
-        </div>
+          </section>
+        </section>
       </div>
     </main>
 
@@ -110,8 +138,10 @@
       <span class="cta__icon" aria-hidden="true">↗</span>
     </a>
 
+    <script defer src="./hebcal.js?v=1"></script>
     <script defer src="./week-journal.js?v=1"></script>
     <script defer src="./todo.js?v=1"></script>
+    <script defer src="./github-sync.js?v=1"></script>
     <script defer src="./home-now.js?v=1"></script>
   </body>
 </html>

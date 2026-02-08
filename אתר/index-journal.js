@@ -60,6 +60,8 @@
     const isThisMonthToday =
       year === today.getFullYear() && month0 === today.getMonth();
 
+    const shabbatIsoDates = [];
+
     const totalCells = 42; // 6 weeks
     for (let i = 0; i < totalCells; i++) {
       const dayNumber = i - firstDow + 1;
@@ -79,9 +81,11 @@
       a.className = 'cal__cell';
       a.href = dailyJournalUrlForDate(iso);
       a.setAttribute('aria-label', `פתיחת יומן יומי עבור ${iso}`);
+      a.setAttribute('data-iso-date', iso);
 
       if (dow === 6) {
         a.classList.add('cal__cell--shabbat');
+        shabbatIsoDates.push(iso);
       }
 
       if (isThisMonthToday && dayNumber === today.getDate()) {
@@ -93,7 +97,38 @@
       daySpan.textContent = String(dayNumber);
       a.appendChild(daySpan);
 
+      if (dow === 6) {
+        const p = document.createElement('div');
+        p.className = 'cal__parasha';
+        p.hidden = true;
+        a.appendChild(p);
+      }
+
       gridEl.appendChild(a);
+    }
+
+    const api = window.SeferHebcal;
+    if (api && shabbatIsoDates.length) populateParashaNames(api, shabbatIsoDates);
+  };
+
+  const parashaNameOnly = (s) => String(s || '').trim().replace(/^פרשת\s+/, '').trim();
+
+  const populateParashaNames = async (api, isoDates) => {
+    const byDate = await api.getInfoForDates(isoDates);
+    const cells = gridEl.querySelectorAll('.cal__cell--shabbat[data-iso-date]');
+    for (const cell of cells) {
+      const iso = cell.getAttribute('data-iso-date');
+      const info = byDate?.[iso] || {};
+      const name = parashaNameOnly(info.parasha);
+      const el = cell.querySelector('.cal__parasha');
+      if (!el) continue;
+      if (!name) {
+        el.textContent = '';
+        el.hidden = true;
+        continue;
+      }
+      el.textContent = name;
+      el.hidden = false;
     }
   };
 

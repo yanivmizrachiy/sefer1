@@ -1,12 +1,36 @@
 (() => {
   const STORAGE_KEY = 'sefer1_todos_v1';
 
+  const panel = document.getElementById('todoPanel');
+  const toggleBtn = document.getElementById('todoToggle');
+
   const form = document.getElementById('todoForm');
   const input = document.getElementById('todoInput');
   const list = document.getElementById('todoList');
   const empty = document.getElementById('todoEmpty');
 
+  if (toggleBtn && panel) {
+    toggleBtn.addEventListener('click', () => {
+      const willOpen = Boolean(panel.hidden);
+      panel.hidden = !willOpen;
+      toggleBtn.setAttribute('aria-expanded', String(willOpen));
+
+      if (willOpen && input) {
+        setTimeout(() => input.focus(), 0);
+      }
+    });
+  }
+
   if (!form || !input || !list || !empty) return;
+
+  let storageOk = true;
+  const setStorageOk = (ok) => {
+    storageOk = Boolean(ok);
+    if (!storageOk) {
+      empty.hidden = false;
+      empty.textContent = 'שמירה לא זמינה בדפדפן זה.';
+    }
+  };
 
   const safeParse = (raw) => {
     try {
@@ -18,8 +42,15 @@
   };
 
   const load = () => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const items = safeParse(raw || '[]');
+    let raw = '[]';
+    try {
+      raw = localStorage.getItem(STORAGE_KEY) || '[]';
+      setStorageOk(true);
+    } catch {
+      setStorageOk(false);
+    }
+
+    const items = safeParse(raw);
     return items
       .filter((t) => t && typeof t.text === 'string')
       .map((t) => ({
@@ -31,7 +62,13 @@
   };
 
   const save = (items) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    if (!storageOk) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      setStorageOk(true);
+    } catch {
+      setStorageOk(false);
+    }
   };
 
   let todos = load();

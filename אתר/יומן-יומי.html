@@ -35,6 +35,13 @@
         <section class="day-notes" aria-label="הערות ליום">
           <h2 class="card__title">הערות ליום</h2>
 
+          <div class="day-shabbat" id="dayShabbat" hidden>
+            <div class="day-shabbat__lines" id="dayShabbatLines"></div>
+            <div class="day-shabbat__credit">
+              מקור <a href="https://www.hebcal.com/" target="_blank" rel="noopener noreferrer">Hebcal.com</a>
+            </div>
+          </div>
+
           <label class="day-notes__label" for="dayNotesInput">מה חשוב לזכור/לתעד לגבי היום הזה?</label>
           <textarea
             class="day-notes__input"
@@ -70,6 +77,7 @@
       <span class="cta__icon" aria-hidden="true">↗</span>
     </a>
 
+    <script defer src="./hebcal.js?v=1"></script>
     <script defer src="./journal-day.js?v=1"></script>
   </body>
 </html>

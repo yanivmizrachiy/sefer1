@@ -49,7 +49,7 @@ body{
   margin: 0;
   padding: 10px 18px 26px;
   display: grid;
-  grid-template-columns: minmax(380px, 34vw) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 18px;
   align-items: stretch;
   direction: ltr;
@@ -74,6 +74,30 @@ body{
   align-items: center;
   gap: 10px;
 }
+
+.btn--week-prev,
+.btn--week-next{
+  min-width: 112px;
+  padding-inline: 14px;
+  font-weight: 900;
+  font-size: 1.02rem;
+  line-height: 1;
+}
+
+/* Week navigation arrows: right = previous week (yellow), left = next week (pink) */
+.btn.btn--week-prev{
+  background: var(--todoBg);
+  color: var(--todoFg);
+  border-color: rgba(6, 27, 58, 0.28);
+}
+.btn.btn--week-prev:hover{ background: rgba(255, 243, 128, 0.88); }
+
+.btn.btn--week-next{
+  background: rgba(183, 120, 255, 0.36);
+  color: var(--fg);
+  border-color: rgba(183, 120, 255, 0.35);
+}
+.btn.btn--week-next:hover{ background: rgba(183, 120, 255, 0.44); }
 .week-journal__title{
   font-size: 1.15rem;
   font-weight: 800;
@@ -100,10 +124,11 @@ body{
 .week__top{
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   gap: 6px;
   width: 100%;
+  text-align: center;
 }
 .week__name{
   font-weight: 900;
@@ -123,12 +148,94 @@ body{
   color: rgba(6, 27, 58, 0.78);
 }
 
+.week__notes{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  font-size: 0.98rem;
+  line-height: 1.5;
+  opacity: 0.98;
+  color: rgba(6, 27, 58, 0.94);
+  background: rgba(2, 6, 23, 0.04);
+  border-radius: 12px;
+  padding: 10px 10px 0;
+}
+
+.week__hebcal{
+  margin-top: 10px;
+  margin-inline: auto;
+  text-align: center;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(6, 27, 58, 0.94);
+  background: rgba(2, 6, 23, 0.04);
+  border-radius: 12px;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.week__hebcal .hebcalItem,
+.day-shabbat .hebcalRow{
+  font-weight: 900;
+  letter-spacing: 0.1px;
+}
+
+.week__hebcal .hebcalLabel,
+.day-shabbat .hebcalLabel{
+  opacity: 0.95;
+}
+
+.week__hebcal .hebcalValue,
+.day-shabbat .hebcalValue{
+  font-variant-numeric: tabular-nums;
+}
+
+.week__hebcal .hebcalSep{
+  opacity: 0.75;
+  font-weight: 800;
+}
+
+/* Emphasis colors (reuse existing palette: yellow from todo + purple from week-next button) */
+.week__hebcal .hebcalItem--candles,
+.day-shabbat .hebcalRow--candles{
+  background: var(--todoBg);
+  color: var(--todoFg);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: inline-block;
+}
+
+.week__hebcal .hebcalItem--havdalah,
+.day-shabbat .hebcalRow--havdalah{
+  background: rgba(183, 120, 255, 0.22);
+  border: 1px solid rgba(183, 120, 255, 0.28);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: inline-block;
+}
+
+.week__hebcal .hebcalItem--parasha,
+.day-shabbat .hebcalRow--parasha{
+  background: rgba(183, 120, 255, 0.14);
+  border: 1px solid rgba(183, 120, 255, 0.22);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: inline-block;
+}
+
+.week-journal__credit{
+  margin-top: 10px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+.week-journal__credit a{ color: inherit; }
+
 @media (max-width: 920px){
   .week-journal .cal__cell{ min-height: 340px; }
 }
 
 .home-grid .card{
-  margin: 24px 0 0;
+  margin: 0;
   max-width: none;
 }
 
@@ -149,7 +256,7 @@ body{
 }
 
 @media (max-width: 920px){
-  .home-grid{ grid-template-columns: minmax(320px, 46vw) minmax(0, 1fr); }
+  .home-grid{ grid-template-columns: 1fr; }
 }
 
 .todo{
@@ -164,6 +271,25 @@ body{
   flex-direction: column;
   min-height: 640px;
 }
+
+.day-shabbat{
+  margin: 10px 0 14px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}
+.day-shabbat__lines{
+  display: grid;
+  gap: 6px;
+  font-weight: 800;
+}
+.day-shabbat__credit{
+  margin-top: 8px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+.day-shabbat__credit a{ color: inherit; }
 
 .todo__title{
   margin: 0 0 8px;
@@ -261,6 +387,46 @@ body{
 .todo .btn--primary{
   border-color: rgba(6, 27, 58, 0.25);
   background: linear-gradient(90deg, rgba(255,255,255,0.55), rgba(255,255,255,0.35));
+}
+
+.sync{
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(6, 27, 58, 0.22);
+  display: grid;
+  gap: 10px;
+}
+.sync__title{
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+.sync__hint{
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+.sync__label{
+  font-weight: 800;
+}
+.sync__input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 27, 58, 0.25);
+  background: rgba(255,255,255,0.78);
+  color: rgba(6, 27, 58, 0.98);
+  font: inherit;
+}
+.sync__input:focus-visible{
+  outline: 3px solid rgba(183,120,255,.45);
+  outline-offset: 2px;
+}
+.sync__actions{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
 }
 
 .cta{
@@ -619,6 +785,17 @@ tbody tr:nth-child(odd){
 .cal__day{
   font-weight: 700;
   font-size: 1.12rem;
+}
+
+.cal__parasha{
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.1px;
+  opacity: 0.95;
+  color: rgba(6, 27, 58, 0.94);
 }
 
 @media (max-width: 720px){
