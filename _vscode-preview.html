@@ -15,7 +15,7 @@
     <script>
       (function () {
         const DEFAULT_TARGET = '/%D7%90%D7%AA%D7%A8/index.html';
-        const REFRESH_MS = 1000;
+        const REFRESH_MS = 120000;
 
         function getTargetPath() {
           // Expect URL-encoded path in hash, e.g. #/%D7%90%D7%AA%D7%A8/index.html
@@ -43,6 +43,11 @@
 
         refresh();
         setInterval(refresh, REFRESH_MS);
+
+        window.addEventListener('hashchange', refresh);
+        document.addEventListener('visibilitychange', function () {
+          if (!document.hidden) refresh();
+        });
       })();
     </script>
   </body>

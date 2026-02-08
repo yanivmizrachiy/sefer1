@@ -1,12 +1,11 @@
 (() => {
   const titleEl = document.getElementById('dayTitle');
-  const metaEl = document.getElementById('dayMeta');
-  const listEl = document.getElementById('commitList');
-  const loadingEl = document.getElementById('state-loading');
-  const emptyEl = document.getElementById('state-empty');
-  const errorEl = document.getElementById('state-error');
 
-  if (!titleEl || !metaEl || !listEl || !loadingEl || !emptyEl || !errorEl) return;
+  const notesInputEl = document.getElementById('dayNotesInput');
+  const notesSaveEl = document.getElementById('dayNotesSave');
+  const notesStatusEl = document.getElementById('dayNotesStatus');
+
+  if (!titleEl) return;
 
   const DEFAULT_OWNER = 'yanivmizrachiy';
   const DEFAULT_REPO = 'sefer1';
@@ -22,15 +21,34 @@
   const pad2 = (n) => String(n).padStart(2, '0');
   const toIsoDate = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 
+  const toDayMonthYear = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+
   const isValidIsoDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ''));
 
   const today = new Date();
-  const isoDate = isValidIsoDate(dateParam) ? dateParam : toIsoDate(today);
+  const isoDate = (() => {
+    const raw = String(dateParam || '').trim();
+    if (raw === 'today' || raw === 'היום') return toIsoDate(today);
+    return isValidIsoDate(raw) ? raw : toIsoDate(today);
+  })();
 
   const parseIsoDate = (iso) => {
     const [y, m, d] = String(iso).split('-').map((x) => Number(x));
     if (!y || !m || !d) return null;
     return new Date(y, m - 1, d);
+  };
+
+  const weekdayForIsoDate = (iso) => {
+    const date = parseIsoDate(iso);
+    if (!date) return '';
+
+    try {
+      const label = new Intl.DateTimeFormat('he-IL', { weekday: 'long' }).format(date);
+      return String(label || '');
+    } catch {
+      const dayNames = ['יום ראשון', 'יום שני', 'יום שלישי', 'יום רביעי', 'יום חמישי', 'יום שישי', 'יום שבת'];
+      return dayNames[date.getDay()] || '';
+    }
   };
 
   const addDays = (iso, delta) => {
@@ -47,6 +65,42 @@
   const repo = params.get('repo') || DEFAULT_REPO;
   const branch = params.get('branch') || DEFAULT_BRANCH;
 
+  const NOTES_STORAGE_PREFIX = 'sefer1_day_notes_v1';
+  const notesKeyFor = (dateIso) => `${NOTES_STORAGE_PREFIX}:${owner}/${repo}/${branch}:${dateIso}`;
+
+  const setNotesStatus = (text) => {
+    if (!notesStatusEl) return;
+    const value = String(text || '').trim();
+    if (!value) {
+      notesStatusEl.hidden = true;
+      notesStatusEl.textContent = '';
+      return;
+    }
+    notesStatusEl.hidden = false;
+    notesStatusEl.textContent = value;
+  };
+
+  const loadNotes = () => {
+    if (!notesInputEl) return;
+    try {
+      const raw = localStorage.getItem(notesKeyFor(isoDate));
+      notesInputEl.value = typeof raw === 'string' ? raw : '';
+    } catch {
+      // localStorage might be blocked; do nothing.
+    }
+  };
+
+  const saveNotes = () => {
+    if (!notesInputEl) return;
+    try {
+      localStorage.setItem(notesKeyFor(isoDate), String(notesInputEl.value || ''));
+      setNotesStatus('נשמר.');
+      window.setTimeout(() => setNotesStatus(''), 1400);
+    } catch {
+      setNotesStatus('לא ניתן לשמור בדפדפן זה.');
+    }
+  };
+
   const dayUrl = (dateIso) => {
     const p = new URLSearchParams({ date: dateIso, owner, repo, branch });
     return `./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?${p.toString()}`;
@@ -56,86 +110,36 @@
   if (nextEl) nextEl.href = dayUrl(addDays(isoDate, 1));
   if (todayEl) todayEl.href = dayUrl(toIsoDate(today));
 
-  const githubCommitsPage = (() => {
-    const p = new URLSearchParams({ since, until });
-    return `https://github.com/${owner}/${repo}/commits/${branch}/?${p.toString()}`;
-  })();
-
-  function setState({ loading, empty, error }) {
-    loadingEl.hidden = !loading;
-    emptyEl.hidden = !empty;
-    errorEl.hidden = !error;
+  if (notesSaveEl) {
+    notesSaveEl.addEventListener('click', () => saveNotes());
   }
-
-  function escapeText(s) {
-    return String(s == null ? '' : s);
-  }
-
-  async function load() {
-    titleEl.textContent = `יומן יומי — ${isoDate}`;
-    metaEl.textContent = `הנתונים נטענים מ־GitHub עבור ${owner}/${repo} (ענף: ${branch}).`;
-
-    setState({ loading: true, empty: false, error: false });
-    listEl.replaceChildren();
-
-    try {
-      const apiUrl = new URL(`https://api.github.com/repos/${owner}/${repo}/commits`);
-      apiUrl.searchParams.set('sha', branch);
-      apiUrl.searchParams.set('since', since);
-      apiUrl.searchParams.set('until', until);
-      apiUrl.searchParams.set('per_page', '100');
-
-      const res = await fetch(apiUrl.toString(), {
-        headers: {
-          Accept: 'application/vnd.github+json',
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
+  if (notesInputEl) {
+    notesInputEl.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        saveNotes();
       }
-
-      const commits = await res.json();
-      if (!Array.isArray(commits) || commits.length === 0) {
-        setState({ loading: false, empty: true, error: false });
-        return;
-      }
-
-      commits.forEach((c) => {
-        const li = document.createElement('li');
-
-        const sha = (c && c.sha ? String(c.sha) : '').slice(0, 7);
-        const message = c && c.commit && c.commit.message ? String(c.commit.message) : '(ללא הודעה)';
-        const oneLine = message.split('\n')[0];
-        const url = c && c.html_url ? String(c.html_url) : githubCommitsPage;
-
-        const a = document.createElement('a');
-        a.className = 'link';
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = `${escapeText(oneLine)} (${sha})`;
-
-        li.appendChild(a);
-        listEl.appendChild(li);
-      });
-
-      const more = document.createElement('li');
-      const moreLink = document.createElement('a');
-      moreLink.className = 'link';
-      moreLink.href = githubCommitsPage;
-      moreLink.target = '_blank';
-      moreLink.rel = 'noopener noreferrer';
-      moreLink.textContent = 'פתיחה ב־GitHub (רשימת commits מלאה ליום)';
-      more.appendChild(moreLink);
-      listEl.appendChild(more);
-
-      setState({ loading: false, empty: false, error: false });
-    } catch (err) {
-      console.error('Failed to load day commits', err);
-      setState({ loading: false, empty: false, error: true });
-    }
+    });
   }
 
-  load();
+  window.addEventListener('storage', (e) => {
+    if (!notesInputEl) return;
+    if (e.key !== notesKeyFor(isoDate)) return;
+    loadNotes();
+  });
+
+  const weekday = weekdayForIsoDate(isoDate);
+  const titleDate = parseIsoDate(isoDate);
+  const dmy = titleDate ? toDayMonthYear(titleDate) : isoDate;
+
+  // Avoid RTL bidi flipping for numeric dates (e.g. 8/2/2026 -> 2026/2/8)
+  titleEl.replaceChildren();
+  if (weekday) titleEl.appendChild(document.createTextNode(`${weekday} — `));
+  const dateSpan = document.createElement('span');
+  dateSpan.setAttribute('dir', 'ltr');
+  dateSpan.textContent = dmy;
+  titleEl.appendChild(dateSpan);
+
+  document.title = weekday ? `${weekday} — ${dmy}` : dmy;
+  loadNotes();
 })();

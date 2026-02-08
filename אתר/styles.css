@@ -69,42 +69,52 @@ body{
   gap: 10px;
   margin-bottom: 10px;
 }
+.week-journal__actions{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
 .week-journal__title{
   font-size: 1.15rem;
   font-weight: 800;
   color: #e5e7eb;
 }
 .week-journal__row{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 16px;
-  overflow-x: auto;
   padding-bottom: 6px;
+  direction: rtl;
 }
 .week-journal .cal__cell{
   min-height: 640px;
   padding: 18px;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 .week__cell{
-  flex: 1;
-  min-width: 220px;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
 }
 .week__top{
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 6px;
   width: 100%;
 }
 .week__name{
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.35rem;
 }
 .week__day{
   font-weight: 900;
-  font-size: 2.4rem;
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  white-space: nowrap;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 .week__iso{
   margin-top: 8px;
@@ -125,6 +135,17 @@ body{
 .home-grid__full{
   grid-column: 1 / -1;
   margin-top: 0;
+}
+
+/* Home header clock (date + time) */
+#homeNow{
+  color: #93c5fd;
+  text-shadow:
+    0 0 14px rgba(124,240,255,.22),
+    0 0 26px rgba(124,240,255,.12);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
 }
 
 @media (max-width: 920px){
@@ -407,6 +428,39 @@ tbody tr:nth-child(odd){
   margin-top: 12px;
 }
 
+.day-notes{
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+.day-notes__meta{
+  margin: 0 0 10px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+.day-notes__label{
+  display:block;
+  margin: 0 0 8px;
+  color: #e5e7eb;
+  font-size: 0.95rem;
+}
+.day-notes__input{
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(2, 6, 23, 0.55);
+  color: var(--fg);
+  padding: 10px 12px;
+  font: inherit;
+  line-height: 1.6;
+}
+.day-notes__input:focus-visible{
+  outline: 3px solid rgba(124,240,255,.55);
+  outline-offset: 3px;
+}
+
 .btn{
   display:inline-flex;
   align-items:center;
@@ -434,6 +488,14 @@ tbody tr:nth-child(odd){
 .btn--primary{
   border-color: rgba(124,240,255,.45);
   background: linear-gradient(90deg, rgba(124,240,255,.18), rgba(183,120,255,.16));
+}
+.btn--danger{
+  border-color: rgba(248,113,113,.55);
+  background: linear-gradient(90deg, rgba(248,113,113,.20), rgba(244,63,94,.18));
+}
+.btn--warning{
+  border-color: rgba(251,146,60,.55);
+  background: linear-gradient(90deg, rgba(251,146,60,.20), rgba(245,158,11,.18));
 }
 .btn--ghost{
   background: rgba(255,255,255,0.04);

@@ -65,8 +65,6 @@
 
         <aside class="todo" aria-label="משימות לביצוע">
           <h2 class="todo__title">משימות לביצוע</h2>
-          <p class="todo__meta">נשמר מקומית בדפדפן (שמירה אמיתית).</p>
-
           <form class="todo__form" id="todoForm">
             <label class="todo__label" for="todoInput">משימה חדשה</label>
             <div class="todo__row">
@@ -88,11 +86,13 @@
         </aside>
 
         <div class="card">
-          <h2 class="card__title">יומן שבועי</h2>
           <div class="week-journal" id="weekJournal" data-owner="yanivmizrachiy" data-repo="sefer1" data-branch="main">
             <div class="week-journal__head">
               <div class="week-journal__title" id="weekTitle" aria-live="polite"></div>
-              <a class="btn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">תצוגה חודשית</a>
+              <div class="week-journal__actions">
+                <a class="btn btn--warning" id="weekDailyBtn" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?date=today&amp;owner=yanivmizrachiy&amp;repo=sefer1&amp;branch=main">תצוגה יומית</a>
+                <a class="btn btn--danger" href="./%D7%99%D7%95%D7%9E%D7%9F-%D7%97%D7%95%D7%93%D7%A9%D7%99.html">תצוגה חודשית</a>
+              </div>
             </div>
             <div class="week-journal__row" id="weekRow" role="group" aria-label="7 ימים"></div>
           </div>

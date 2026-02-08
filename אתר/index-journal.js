@@ -28,7 +28,10 @@
 
   const toIsoDate = (y, m0, d) => `${y}-${pad2(m0 + 1)}-${pad2(d)}`;
 
-  const dailyJournalUrlForDate = (isoDate) => `./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?date=${encodeURIComponent(isoDate)}`;
+  const dailyJournalUrlForDate = (isoDate) => {
+    const p = new URLSearchParams({ date: isoDate, owner, repo, branch });
+    return `./%D7%99%D7%95%D7%9E%D7%9F-%D7%99%D7%95%D7%9E%D7%99.html?${p.toString()}`;
+  };
 
   const commitsUrlForDate = (isoDate) => {
     const since = `${isoDate}T00:00:00Z`;

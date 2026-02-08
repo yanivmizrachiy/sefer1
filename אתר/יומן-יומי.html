@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#061b3a">
 
     <title>יומן יומי</title>
-    <meta name="description" content="יומן יומי – רשימת commits לפי יום">
+    <meta name="description" content="יומן יומי – אירועים שנשמרו לפי יום">
 
     <link rel="stylesheet" href="./styles.css?v=1">
   </head>
@@ -19,7 +19,7 @@
 
     <main class="page page--journal">
       <header class="page__header">
-        <h1 class="page__title" id="dayTitle">יומן יומי</h1>
+        <h1 class="page__title" id="dayTitle"></h1>
         <a class="page__back" href="./index.html">← חזרה לעמוד הראשי</a>
       </header>
 
@@ -31,14 +31,24 @@
         <a class="btn" href="./about.html">אודות</a>
       </nav>
 
-      <p class="page__meta" id="dayMeta"></p>
-
       <div class="card card--page">
-        <p id="state-loading" class="state">טוען commits…</p>
-        <p id="state-empty" class="state" hidden>לא נמצאו commits לתאריך הזה.</p>
-        <p id="state-error" class="state state--error" hidden>לא ניתן היה לטעון את ה־commits כרגע.</p>
+        <section class="day-notes" aria-label="הערות ליום">
+          <h2 class="card__title">הערות ליום</h2>
 
-        <ul class="list" id="commitList"></ul>
+          <label class="day-notes__label" for="dayNotesInput">מה חשוב לזכור/לתעד לגבי היום הזה?</label>
+          <textarea
+            class="day-notes__input"
+            id="dayNotesInput"
+            name="dayNotes"
+            rows="6"
+            placeholder="כתוב כאן…"
+          ></textarea>
+
+          <div class="card__actions">
+            <button class="btn btn--primary" type="button" id="dayNotesSave">שמירה</button>
+            <span class="state" id="dayNotesStatus" aria-live="polite" hidden></span>
+          </div>
+        </section>
 
         <div class="card__actions">
           <a class="btn" id="dayPrev" href="#">← יום קודם</a>

@@ -2,6 +2,7 @@
   const root = document.getElementById('weekJournal');
   const titleEl = document.getElementById('weekTitle');
   const rowEl = document.getElementById('weekRow');
+  const dailyBtnEl = document.getElementById('weekDailyBtn');
 
   if (!root || !titleEl || !rowEl) return;
 
@@ -24,6 +25,11 @@
   const today = new Date();
   const todayIso = toIsoDate(today);
 
+  if (dailyBtnEl) {
+    dailyBtnEl.href = dailyJournalUrlForDate(todayIso);
+    dailyBtnEl.setAttribute('aria-label', `פתיחת יומן יומי עבור היום (${todayIso})`);
+  }
+
   const addDays = (d, delta) => {
     const n = new Date(d);
     n.setDate(n.getDate() + delta);
@@ -42,18 +48,25 @@
 
     const start = startOfWeekSunday(today);
     const end = addDays(start, 6);
-    titleEl.textContent = `שבוע נוכחי (ראשון–שבת) ${toDayMonth(start)}–${toDayMonth(end)}`;
+    // Avoid RTL bidi flipping for numeric dates (e.g. 7/4 -> 4/7).
+    titleEl.replaceChildren();
+    titleEl.appendChild(document.createTextNode('תצוגה שבועית לתאריכים '));
+    const titleDates = document.createElement('span');
+    titleDates.setAttribute('dir', 'ltr');
+    titleDates.textContent = `${toDayMonth(start)}–${toDayMonth(end)}`;
+    titleEl.appendChild(titleDates);
 
     // Render a real week: Sunday..Saturday (in RTL the week reads right-to-left naturally).
     for (let i = 0; i < 7; i++) {
       const d = addDays(start, i);
       const iso = toIsoDate(d);
       const dow = d.getDay();
+      const dm = toDayMonth(d);
 
       const a = document.createElement('a');
       a.className = 'week__cell cal__cell';
       a.href = dailyJournalUrlForDate(iso);
-      a.setAttribute('aria-label', `פתיחת יומן יומי עבור ${iso}`);
+      a.setAttribute('aria-label', `פתיחת יומן יומי עבור ${dm} (${iso})`);
 
       if (iso === todayIso) {
         a.classList.add('cal__cell--today');
@@ -71,7 +84,8 @@
 
       const day = document.createElement('div');
       day.className = 'week__day';
-      day.textContent = String(d.getDate());
+      day.setAttribute('dir', 'ltr');
+      day.textContent = dm;
 
       top.appendChild(name);
       top.appendChild(day);
