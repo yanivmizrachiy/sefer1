@@ -2,6 +2,30 @@
   const el = document.getElementById('homeNow');
   if (!el) return;
 
+  const SYNC_GIST_ID_KEY = 'sefer1_sync_gist_id_v1';
+
+  const getStoredGistId = () => {
+    try {
+      return String(localStorage.getItem(SYNC_GIST_ID_KEY) || '').trim();
+    } catch {
+      return '';
+    }
+  };
+
+  const updateExternalLink = () => {
+    const a = document.querySelector('a.cta[aria-label="קישור חיצוני"]');
+    if (!a) return;
+
+    try {
+      const url = new URL(location.href);
+      const gistId = getStoredGistId();
+      if (gistId) url.searchParams.set('gistId', gistId);
+      a.href = url.toString();
+    } catch {
+      // ignore
+    }
+  };
+
   const pad2 = (n) => String(n).padStart(2, '0');
 
   const weekdayName = (d) => {
@@ -31,9 +55,17 @@
   };
 
   render();
+  updateExternalLink();
   setInterval(render, 1000);
 
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) render();
+    if (!document.hidden) {
+      render();
+      updateExternalLink();
+    }
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (e && e.key === SYNC_GIST_ID_KEY) updateExternalLink();
   });
 })();
