@@ -17,9 +17,10 @@
   const pushEl = document.getElementById(PUSH_BTN_ID);
   const statusEl = document.getElementById(STATUS_ID);
 
-  if (!tokenEl || !pullEl || !pushEl || !statusEl) return;
+  const getToken = () => (tokenEl ? String(tokenEl.value || '').trim() : '');
 
   const setStatus = (text) => {
+    if (!statusEl) return;
     const value = String(text || '').trim();
     statusEl.hidden = !value;
     statusEl.textContent = value;
@@ -54,6 +55,22 @@
       return false;
     }
   };
+
+  const applyGistId = (id) => {
+    const v = String(id || '').trim();
+    if (!v) return;
+    setGistId(v);
+    if (gistEl) gistEl.value = v;
+  };
+
+  // Allow sharing the sync target via URL, e.g. index.html?gistId=<id>
+  try {
+    const p = new URLSearchParams(location.search);
+    const fromUrl = String(p.get('gistId') || '').trim();
+    if (fromUrl) applyGistId(fromUrl);
+  } catch {
+    // ignore
+  }
 
   if (gistEl) {
     gistEl.value = getStoredGistId();
@@ -193,11 +210,7 @@
   };
 
   const pullFromGitHub = async () => {
-    const token = String(tokenEl.value || '').trim();
-    if (!token) {
-      setStatus('צריך token כדי למשוך');
-      return;
-    }
+    const token = getToken();
 
     const gistId = getGistId();
     if (!gistId) {
@@ -205,7 +218,7 @@
       return;
     }
 
-    setStatus('טוען מגיטהאב');
+    setStatus(token ? 'טוען מגיטהאב' : 'טוען מגיטהאב (קריאה בלבד)');
     const gist = await ghFetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, { token });
     const content = getSyncFileContentFromGist(gist);
     const payload = safeJsonParse(content, null);
@@ -217,6 +230,38 @@
 
     applyRemotePayload(payload);
     setStatus('נמשכו נתונים ונשמרו בדפדפן');
+  };
+
+  const hasAnyLocalData = () => {
+    try {
+      const todos = safeJsonParse(localStorage.getItem(TODOS_KEY) || '[]', []);
+      if (Array.isArray(todos) && todos.length) return true;
+    } catch {
+      // ignore
+    }
+
+    try {
+      return listNoteKeys().length > 0;
+    } catch {
+      return false;
+    }
+  };
+
+  // Make external browsers show real saved data:
+  // If this browser has no local data yet, pull once on load (token optional).
+  const autoPullIfEmpty = async () => {
+    const gistId = getGistId();
+    if (!gistId) return;
+    if (hasAnyLocalData()) return;
+
+    try {
+      await pullFromGitHub();
+    } catch {
+      // If GitHub blocks unauthenticated access or rate-limits, user can paste token and click Pull.
+      if (statusEl) {
+        setStatus('לא ניתן למשוך אוטומטית. הדבק token ולחץ קבל מגיטהאב');
+      }
+    }
   };
 
   const pushToGitHub = async () => {
@@ -278,6 +323,9 @@
     }
   };
 
-  pullEl.addEventListener('click', withHandling(pullFromGitHub));
-  pushEl.addEventListener('click', withHandling(pushToGitHub));
+  if (pullEl) pullEl.addEventListener('click', withHandling(pullFromGitHub));
+  if (pushEl) pushEl.addEventListener('click', withHandling(pushToGitHub));
+
+  // Run after handlers are set.
+  autoPullIfEmpty();
 })();
