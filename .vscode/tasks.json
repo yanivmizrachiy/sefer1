@@ -57,6 +57,28 @@
       }
     },
     {
+      "label": "DEV: Persistent Mode (serve + Playwright Chromium)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\tools\\persistent-dev-playwright.ps1",
+        "-StartPath",
+        "/%D7%90%D7%AA%D7%A8/index.html"
+      ],
+      "isBackground": false,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
       "label": "Persistent Mode: Stop (kill task terminal)",
       "type": "shell",
       "command": "powershell",

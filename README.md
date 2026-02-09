@@ -4,6 +4,10 @@
 
 - https://yanivmizrachiy.github.io/sefer1/
 
+קיצור לשולחן העבודה (Windows):
+
+- הרץ: `create-desktop-shortcut.ps1`
+
 מסמך הפתיחה נמצא כאן:
 
 - הקדמה.md

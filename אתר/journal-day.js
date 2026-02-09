@@ -96,7 +96,31 @@
   const saveNotes = ({ silent } = {}) => {
     if (!notesInputEl) return;
     try {
-      localStorage.setItem(notesKeyFor(isoDate), String(notesInputEl.value || ''));
+      const k = notesKeyFor(isoDate);
+      const valueToSave = String(notesInputEl.value || '');
+      localStorage.setItem(k, valueToSave);
+
+      // Verify persistence (quota / blocked storage can fail silently in some environments).
+      try {
+        const readBack = localStorage.getItem(k);
+        if (String(readBack ?? '') !== valueToSave) {
+          if (!silent) setNotesStatus('השמירה נכשלה בדפדפן זה.');
+          return;
+        }
+      } catch {
+        // ignore read-back failures; we already wrote successfully.
+      }
+
+      try {
+        window.dispatchEvent(
+          new CustomEvent('sefer1:dataChanged', {
+            detail: { kind: 'notes', key: k, isoDate, at: Date.now() },
+          })
+        );
+      } catch {
+        // ignore
+      }
+
       if (!silent) {
         setNotesStatus('נשמר.');
         window.setTimeout(() => setNotesStatus(''), 1400);
@@ -145,6 +169,11 @@
   window.addEventListener('storage', (e) => {
     if (!notesInputEl) return;
     if (e.key !== notesKeyFor(isoDate)) return;
+    loadNotes();
+  });
+
+  // If a pull updated localStorage in this tab, re-load notes.
+  window.addEventListener('sefer1:dataApplied', () => {
     loadNotes();
   });
 

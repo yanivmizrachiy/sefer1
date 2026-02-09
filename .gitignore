@@ -1,0 +1,9 @@
+node_modules/
+.playwright-profile/
+playwright-report/
+test-results/
+
+# local dev artifacts
+dev-url.txt
+dev-url-status.txt
+tmp_*.txt

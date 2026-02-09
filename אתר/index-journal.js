@@ -97,6 +97,20 @@
       daySpan.textContent = String(dayNumber);
       a.appendChild(daySpan);
 
+      const eventsApi = window.Sefer1Events;
+      if (eventsApi) {
+        const style = String(eventsApi.getPrimaryStyleForIso(iso) || '').trim();
+        if (style) a.classList.add(`cal__cell--event-${style}`);
+
+        const evText = String(eventsApi.getTextForIso(iso) || '').trim();
+        if (evText) {
+          const box = document.createElement('div');
+          box.className = 'cal__events';
+          box.textContent = evText;
+          a.appendChild(box);
+        }
+      }
+
       if (dow === 6) {
         const p = document.createElement('div');
         p.className = 'cal__parasha';

@@ -74,6 +74,9 @@ function Start-LiveServerProcess([int]$Port) {
       '/c', 'npx', '--yes', 'live-server', '.',
       "--host=$HostAddr",
       "--port=$Port",
+      '--ignore=node_modules',
+      '--ignore=.git',
+      '--ignore=.playwright-profile',
       '--no-browser',
       "--wait=$WaitMs"
     ) -NoNewWindow -PassThru

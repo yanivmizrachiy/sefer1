@@ -32,9 +32,29 @@
       const raw = localStorage.getItem(notesKeyFor(dateIso));
       const text = String(raw || '').trim();
       if (!text) return '';
-      const oneLine = text.replace(/\s+/g, ' ').trim();
-      if (oneLine.length <= 160) return oneLine;
-      return oneLine.slice(0, 160) + '…';
+
+      const lines = text
+        .split(/\r?\n/)
+        .map((l) => String(l || '').trim())
+        .filter(Boolean);
+
+      if (!lines.length) return '';
+
+      const out = [];
+      let total = 0;
+      const maxLines = 8;
+      const maxChars = 220;
+
+      for (const line of lines) {
+        if (out.length >= maxLines) break;
+        const nextTotal = total + line.length + (out.length ? 1 : 0);
+        if (nextTotal > maxChars) break;
+        out.push(line);
+        total = nextTotal;
+      }
+
+      const truncated = out.length < lines.length;
+      return out.join('\n') + (truncated ? '\n…' : '');
     } catch {
       return '';
     }
@@ -55,6 +75,12 @@
   })();
 
   let currentWeekOffset = initialWeekOffset;
+
+  let refreshTimer = 0;
+  const scheduleRefresh = () => {
+    window.clearTimeout(refreshTimer);
+    refreshTimer = window.setTimeout(() => render(), 120);
+  };
 
   const urlForWeekOffset = (offset) => {
     const u = new URL(location.href);
@@ -103,15 +129,9 @@
     titleDates.textContent = `${toDayMonth(start)}–${toDayMonth(end)}`;
     titleEl.appendChild(titleDates);
 
-    const dayIndexes = (() => {
-      // Default: a real week Sunday..Saturday.
-      if (currentWeekOffset !== 0) return [0, 1, 2, 3, 4, 5, 6];
-      // Current week: today must be the right-most cell in RTL, so render it first.
-      const t = today.getDay();
-      const next = [];
-      for (let k = 0; k < 7; k++) next.push((t + k) % 7);
-      return next;
-    })();
+    // Always render a real week Sunday..Saturday.
+    // In RTL layouts, the first cell is on the right, so Sunday is right-most and Saturday is left-most.
+    const dayIndexes = [0, 1, 2, 3, 4, 5, 6];
 
     const isoDatesInWeek = [];
 
@@ -157,6 +177,20 @@
         a.appendChild(notes);
       }
 
+      const eventsApi = window.Sefer1Events;
+      if (eventsApi) {
+        const style = String(eventsApi.getPrimaryStyleForIso(iso) || '').trim();
+        if (style) a.classList.add(`cal__cell--event-${style}`);
+
+        const evText = String(eventsApi.getTextForIso(iso) || '').trim();
+        if (evText) {
+          const ev = document.createElement('div');
+          ev.className = 'week__events';
+          ev.textContent = evText;
+          a.appendChild(ev);
+        }
+      }
+
       const hebcalBox = document.createElement('div');
       hebcalBox.className = 'week__hebcal';
       hebcalBox.hidden = true;
@@ -172,6 +206,23 @@
     if (hebcalCreditEl) hebcalCreditEl.hidden = true;
     if (hasHebcal) populateHebcalForWeek(isoDatesInWeek);
   };
+
+  // Keep weekly snippets in sync when localStorage changes.
+  window.addEventListener('storage', (e) => {
+    const k = e && typeof e.key === 'string' ? e.key : '';
+    if (!k) return;
+    if (k.startsWith(NOTES_STORAGE_PREFIX + ':')) scheduleRefresh();
+  });
+
+  // If returning to this page via back/forward cache, re-read localStorage.
+  window.addEventListener('pageshow', () => scheduleRefresh());
+  window.addEventListener('focus', () => scheduleRefresh());
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) scheduleRefresh();
+  });
+
+  // If a pull updated localStorage in this tab, re-render immediately.
+  window.addEventListener('sefer1:dataApplied', () => scheduleRefresh());
 
   const populateHebcalForWeek = async (isoDates) => {
     const api = window.SeferHebcal;

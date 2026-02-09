@@ -66,6 +66,16 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
       setStorageOk(true);
+
+      try {
+        window.dispatchEvent(
+          new CustomEvent('sefer1:dataChanged', {
+            detail: { kind: 'todos', key: STORAGE_KEY, at: Date.now() },
+          })
+        );
+      } catch {
+        // ignore
+      }
     } catch {
       setStorageOk(false);
     }
@@ -174,6 +184,12 @@
   // If another tab updates localStorage, keep in sync.
   window.addEventListener('storage', (e) => {
     if (e.key !== STORAGE_KEY) return;
+    todos = load();
+    render();
+  });
+
+  // If a pull updated localStorage in this tab, re-render.
+  window.addEventListener('sefer1:dataApplied', () => {
     todos = load();
     render();
   });
