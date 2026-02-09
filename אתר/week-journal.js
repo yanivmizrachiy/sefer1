@@ -27,16 +27,56 @@
   const NOTES_STORAGE_PREFIX = 'sefer1_day_notes_v1';
   const notesKeyFor = (dateIso) => `${NOTES_STORAGE_PREFIX}:${owner}/${repo}/${branch}:${dateIso}`;
 
+  const splitPotentialNamesLine = (line) => {
+    const s = String(line || '').trim();
+    if (!s) return [];
+
+    // Only split lines that look like "just names" (Hebrew letters + spaces + common name punctuation).
+    // Avoid splitting sentences or time ranges.
+    const looksLikeNamesOnly = /^[\u0590-\u05FF\s"'׳״\-־,;•]+$/.test(s) && !/\d/.test(s);
+    if (!looksLikeNamesOnly) return [s];
+
+    // Prefer explicit separators first.
+    const sep = /\s*[;,•·|]\s*/;
+    if (sep.test(s)) {
+      return s
+        .split(sep)
+        .map((p) => String(p || '').trim())
+        .filter(Boolean);
+    }
+
+    // If the user used multiple spaces between names, treat it as a list.
+    if (/\s{2,}/.test(s)) {
+      return s
+        .split(/\s{2,}/)
+        .map((p) => String(p || '').trim())
+        .filter(Boolean);
+    }
+
+    // If the user typed a space-separated list of names on one line, split it.
+    // Keep common Hebrew two-word name constructs intact (e.g. "בן ציון", "בת שבע", "בר יוחאי").
+    const tokens = s.split(/\s+/).map((p) => String(p || '').trim()).filter(Boolean);
+    const keepTwoWord = new Set(['בן', 'בת', 'בר']);
+    if (tokens.length === 2 && keepTwoWord.has(tokens[0])) return [s];
+    if (tokens.length >= 2) return tokens;
+
+    return [s];
+  };
+
   const readNotesSnippet = (dateIso) => {
     try {
       const raw = localStorage.getItem(notesKeyFor(dateIso));
       const text = String(raw || '').trim();
       if (!text) return '';
 
-      const lines = text
-        .split(/\r?\n/)
-        .map((l) => String(l || '').trim())
-        .filter(Boolean);
+      const lines = [];
+      for (const rawLine of text.split(/\r?\n/)) {
+        const line = String(rawLine || '').trim();
+        if (!line) continue;
+
+        const parts = splitPotentialNamesLine(line);
+        for (const p of parts) lines.push(p);
+      }
 
       if (!lines.length) return '';
 
@@ -167,6 +207,19 @@
 
       top.appendChild(name);
       top.appendChild(day);
+
+      const hebDay = document.createElement('div');
+      hebDay.className = 'week__hebday';
+      hebDay.hidden = true;
+      hebDay.setAttribute('data-iso-date', iso);
+      top.appendChild(hebDay);
+
+      const rc = document.createElement('div');
+      rc.className = 'week__rosh';
+      rc.hidden = true;
+      rc.setAttribute('data-iso-date', iso);
+      top.appendChild(rc);
+
       a.appendChild(top);
 
       const snippet = readNotesSnippet(iso);
@@ -229,6 +282,32 @@
     if (!api || !Array.isArray(isoDates) || isoDates.length === 0) return;
 
     const byDate = await api.getInfoForDates(isoDates);
+
+    // Hebrew date + Rosh Chodesh
+    const hebEls = rowEl.querySelectorAll('.week__hebday[data-iso-date]');
+    for (const el of hebEls) {
+      const iso = el.getAttribute('data-iso-date');
+      const info = byDate?.[iso] || {};
+      const txt = String(info.hebDayLetters || '').trim();
+      if (!txt) {
+        el.textContent = '';
+        el.hidden = true;
+        continue;
+      }
+      el.textContent = txt;
+      el.hidden = false;
+    }
+
+    const rcEls = rowEl.querySelectorAll('.week__rosh[data-iso-date]');
+    for (const el of rcEls) {
+      const iso = el.getAttribute('data-iso-date');
+      const info = byDate?.[iso] || {};
+      const isRc = Boolean(info.isRoshChodesh);
+      const cell = el.closest('.cal__cell');
+      if (cell) cell.classList.toggle('cal__cell--roshchodesh', isRc);
+      el.textContent = '';
+      el.hidden = !isRc;
+    }
 
     let anyShown = false;
     const boxes = rowEl.querySelectorAll('.week__hebcal[data-iso-date]');

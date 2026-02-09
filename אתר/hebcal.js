@@ -1,5 +1,5 @@
 (() => {
-  const CACHE_KEY = 'sefer1_hebcal_jerusalem_v1';
+  const CACHE_KEY = 'sefer1_hebcal_jerusalem_v2';
 
   const JERUSALEM = {
     latitude: 31.778,
@@ -17,6 +17,125 @@
   };
 
   const isIsoDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ''));
+
+  const isoToUtcNoon = (iso) => {
+    const y = Number(iso.slice(0, 4));
+    const m = Number(iso.slice(5, 7));
+    const d = Number(iso.slice(8, 10));
+    if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
+    return new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  };
+
+  const addDaysIso = (iso, delta) => {
+    const dt = isoToUtcNoon(iso);
+    if (!dt) return '';
+    dt.setUTCDate(dt.getUTCDate() + delta);
+    return toIsoDate(new Date(dt.getTime()));
+  };
+
+  const hebDayFallback = (n) => {
+    const map = {
+      1: 'א׳',
+      2: 'ב׳',
+      3: 'ג׳',
+      4: 'ד׳',
+      5: 'ה׳',
+      6: 'ו׳',
+      7: 'ז׳',
+      8: 'ח׳',
+      9: 'ט׳',
+      10: 'י׳',
+      11: 'י"א',
+      12: 'י"ב',
+      13: 'י"ג',
+      14: 'י"ד',
+      15: 'ט"ו',
+      16: 'ט"ז',
+      17: 'י"ז',
+      18: 'י"ח',
+      19: 'י"ט',
+      20: 'כ׳',
+      21: 'כ"א',
+      22: 'כ"ב',
+      23: 'כ"ג',
+      24: 'כ"ד',
+      25: 'כ"ה',
+      26: 'כ"ו',
+      27: 'כ"ז',
+      28: 'כ"ח',
+      29: 'כ"ט',
+      30: 'ל׳',
+    };
+    return map[n] || '';
+  };
+
+  const computeHebrewInfo = (iso) => {
+    if (!isIsoDate(iso)) return {};
+
+    const dt = isoToUtcNoon(iso);
+    if (!dt) return {};
+
+    const tz = 'Asia/Jerusalem';
+
+    let hebDayNum = 0;
+    let hebDayLetters = '';
+    let hebMonth = '';
+
+    try {
+      const dayNumFmt = new Intl.DateTimeFormat('en-u-ca-hebrew', { day: 'numeric', timeZone: tz });
+      const n = Number.parseInt(dayNumFmt.format(dt), 10);
+      if (Number.isFinite(n)) hebDayNum = n;
+    } catch {
+      hebDayNum = 0;
+    }
+
+    try {
+      const dayHebFmt = new Intl.DateTimeFormat('he-IL-u-ca-hebrew-nu-hebr', { day: 'numeric', timeZone: tz });
+      hebDayLetters = String(dayHebFmt.format(dt) || '').trim();
+      // Some environments might still return digits; fall back to a tiny fixed map for 1..30.
+      if (/^\d+$/.test(hebDayLetters) && hebDayNum) hebDayLetters = hebDayFallback(hebDayNum);
+    } catch {
+      hebDayLetters = hebDayNum ? hebDayFallback(hebDayNum) : '';
+    }
+
+    try {
+      const monthFmt = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { month: 'long', timeZone: tz });
+      hebMonth = String(monthFmt.format(dt) || '').trim();
+    } catch {
+      hebMonth = '';
+    }
+
+    const isRoshChodesh = hebDayNum === 1 || hebDayNum === 30;
+    let roshChodeshMonth = '';
+
+    if (isRoshChodesh) {
+      if (hebDayNum === 1) {
+        roshChodeshMonth = hebMonth;
+      } else {
+        const nextIso = addDaysIso(iso, 1);
+        const nextDt = nextIso ? isoToUtcNoon(nextIso) : null;
+        if (nextDt) {
+          try {
+            const monthFmt = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { month: 'long', timeZone: tz });
+            roshChodeshMonth = String(monthFmt.format(nextDt) || '').trim();
+          } catch {
+            roshChodeshMonth = '';
+          }
+        }
+      }
+    }
+
+    const roshChodeshLabel = isRoshChodesh && roshChodeshMonth ? `ראש חודש ${roshChodeshMonth}` : '';
+
+    return {
+      hebDayLetters,
+      hebDayNum: hebDayNum || undefined,
+      hebMonth: hebMonth || undefined,
+      isRoshChodesh: Boolean(isRoshChodesh),
+      roshChodeshMonth: roshChodeshMonth || undefined,
+      roshChodeshLabel: roshChodeshLabel || undefined,
+    };
+  };
 
   const parseTimeItem = (dateTime) => {
     // Expected: 2026-02-06T16:20:00+02:00
@@ -70,7 +189,7 @@
     u.searchParams.set('s', 'on'); // Parashat ha-Shavuah
     u.searchParams.set('c', 'on'); // Candle lighting + havdalah
     u.searchParams.set('i', 'on'); // Israel schedule
-    u.searchParams.set('b', '18'); // minutes before sunset (override Jerusalem default)
+    u.searchParams.set('b', '40'); // Jerusalem candle-lighting minhag
     u.searchParams.set('M', 'on'); // havdalah at nightfall
     u.searchParams.set('leyning', 'off');
 
@@ -194,7 +313,8 @@
   const getInfoForIsoDate = async (isoDate) => {
     const data = await getData();
     const entry = data.byDate?.[isoDate];
-    return entry && typeof entry === 'object' ? entry : {};
+    const base = entry && typeof entry === 'object' ? entry : {};
+    return { ...base, ...computeHebrewInfo(isoDate) };
   };
 
   const getInfoForDates = async (isoDates) => {
@@ -204,7 +324,8 @@
     for (const iso of list) {
       if (!isIsoDate(iso)) continue;
       const entry = data.byDate?.[iso];
-      out[iso] = entry && typeof entry === 'object' ? entry : {};
+      const base = entry && typeof entry === 'object' ? entry : {};
+      out[iso] = { ...base, ...computeHebrewInfo(iso) };
     }
     return out;
   };

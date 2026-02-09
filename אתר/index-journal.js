@@ -60,7 +60,7 @@
     const isThisMonthToday =
       year === today.getFullYear() && month0 === today.getMonth();
 
-    const shabbatIsoDates = [];
+    const isoDatesInMonth = [];
 
     const totalCells = 42; // 6 weeks
     for (let i = 0; i < totalCells; i++) {
@@ -85,7 +85,6 @@
 
       if (dow === 6) {
         a.classList.add('cal__cell--shabbat');
-        shabbatIsoDates.push(iso);
       }
 
       if (isThisMonthToday && dayNumber === today.getDate()) {
@@ -96,6 +95,12 @@
       daySpan.className = 'cal__day';
       daySpan.textContent = String(dayNumber);
       a.appendChild(daySpan);
+
+      const rc = document.createElement('div');
+      rc.className = 'cal__rosh';
+      rc.hidden = true;
+      rc.setAttribute('data-iso-date', iso);
+      a.appendChild(rc);
 
       const eventsApi = window.Sefer1Events;
       if (eventsApi) {
@@ -118,17 +123,35 @@
         a.appendChild(p);
       }
 
+      isoDatesInMonth.push(iso);
       gridEl.appendChild(a);
     }
 
     const api = window.SeferHebcal;
-    if (api && shabbatIsoDates.length) populateParashaNames(api, shabbatIsoDates);
+    if (api && isoDatesInMonth.length) populateHebcalForMonth(api, isoDatesInMonth);
   };
 
   const parashaNameOnly = (s) => String(s || '').trim().replace(/^פרשת\s+/, '').trim();
 
-  const populateParashaNames = async (api, isoDates) => {
+  const populateHebcalForMonth = async (api, isoDates) => {
     const byDate = await api.getInfoForDates(isoDates);
+
+    const rcEls = gridEl.querySelectorAll('.cal__rosh[data-iso-date]');
+    for (const el of rcEls) {
+      const iso = el.getAttribute('data-iso-date');
+      const info = byDate?.[iso] || {};
+      const label = String(info.roshChodeshLabel || '').trim();
+      const cell = el.closest('.cal__cell');
+      if (cell) cell.classList.toggle('cal__cell--roshchodesh', Boolean(label));
+      if (!label) {
+        el.textContent = '';
+        el.hidden = true;
+        continue;
+      }
+      el.textContent = label;
+      el.hidden = false;
+    }
+
     const cells = gridEl.querySelectorAll('.cal__cell--shabbat[data-iso-date]');
     for (const cell of cells) {
       const iso = cell.getAttribute('data-iso-date');
